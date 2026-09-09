@@ -1,0 +1,18 @@
+/* Theme tokens. Theme is set as data-theme on <html>; default light. */
+
+:root {
+  --bg:#f6f4ef; --ink:#171614; --mute:#8a867e; --faint:#b9b5ab;
+  --hair:#e2ded4; --hair2:#cfcabf; --tint:#faf9f6;
+  --ghost:rgba(23,22,20,0.22); --playhead:rgba(23,22,20,0.55);
+  --accent:#FCBE11; --on-accent:#1a1300; --mark-bg:#111;
+  --sans: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --mono: Menlo, Consolas, "Courier New", monospace;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg:#121212; --ink:#ececec; --mute:#7f7f7f; --faint:#4a4a4a;
+  --hair:#262626; --hair2:#333333; --tint:#161616;
+  --ghost:rgba(236,236,236,0.22); --playhead:rgba(236,236,236,0.55);
+  color-scheme: dark;
+}

@@ -3,15 +3,14 @@
 Read this first when resuming. Keep it current at every checkpoint.
 
 ## Position
-- Phase 1, round 2 delivered 2026-09-09: owner found round 1 (A/B/C) too dense. Added D · Quiet light (= Main.dc.html) and E · Quiet dark: hairlines, one grotesk + one mono, no boxes. Canvas has two pages: 'Round 2 · quiet' (opens first) and 'Round 1 · dense'.
-  Canvas: https://claude.ai/code/artifact/275c965b-2451-48cc-ba31-910cb3e2dc39
-- Mock sources: `design/build_mocks.py` generates the `*.dc.html` artboards and `canvas.json` (run from `design/`). `design/dms-sweep.html` is the assembled canvas (gitignored, regenerate with the design skill helper).
-- Owner chose D (quiet, light) with a dark toggle, Arial, circle logo. Mock updated to match.
-- Phase 2 in progress: `docs/SPEC.md` is the contract. `js/dsp.js` done (main loop). Delegated: `js/audio.js` + `tests/dsp.test.mjs`; `js/graph.js` + `js/sweep.js`; `index.html` + `css/*` + `js/store.js` + `js/export.js` + `js/storage.js` + `js/app.js`.
-- If resuming mid-build: check which of those files exist, run `node tests/dsp.test.mjs`, serve with `python3 -m http.server 8080` and walk the SPEC.md acceptance list.
+- Rev 1 tool is built and working locally (Phases 2 and 3 done, 2026-09-09). Run `python3 -m http.server 8080` in the repo root and open http://localhost:8080.
+- Acceptance (docs/SPEC.md) verified in the in-app Chromium: gate → audio start, drag/keys → readout/needle/playhead, three-point mark → band (fc 3097, Q 2.45, −3 dB), EQ cut measured 3.00 dB via analyser, levels within 0.1 dB of design, export text format exact, reload restores state, theme toggle persists, Copy works (fallback path in the embedded browser).
+- `window.dmsSweep` exposes {store, engine, graph, sweep} for console QA.
+- Not yet done: Safari and Firefox sanity pass; Phase 4 polish pass after owner tries it with headphones; hosting/domain.
 
 ## Pending owner actions
-- None until the Phase 2 build is up for review.
+- Try the tool locally with headphones and report what feels wrong (sweep feel, mark flow, gain adjustment, anything visual).
+- Decide on commit attribution trailer (see Notes).
 - Decide on commit attribution trailer (see Notes).
 
 ## Machine facts

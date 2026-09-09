@@ -208,7 +208,7 @@ coalescing so dragging the sweep doesn't redraw more than once per frame.
 2. Gate shows; nothing plays before "I understand, start"; after it `AudioContext.state`
    is `running`.
 3. Click and drag on the tape: readout, needle, and graph playhead move together and
-   match `dsp.xToFreq`. 20 Hz at the left edge, 20 kHz at the right, 1 kHz at 60.2 %.
+   match `dsp.xToFreq`. 20 Hz at the left edge, 20 kHz at the right, 1 kHz at 56.6 % (ln 50 ÷ ln 1000).
 4. Press 1, 2, 3 at ~2.5k / 3.1k / 3.75k: a band appears with fc 3100, Q ≈ 2.5, gain −3,
    the graph shows the notch, and the band row is selected.
 5. With EQ on, `engine.analyserDb()` at 3100 Hz is ≈ 3 dB lower than with EQ off.

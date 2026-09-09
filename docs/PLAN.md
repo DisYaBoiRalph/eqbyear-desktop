@@ -38,3 +38,4 @@ dips. Output: generic 8-band PEQ text. Rev 1 is the tool with minimal prose.
 | 2026-09-09 | Phase 1: three design directions on a design canvas | Artboards + generator in `design/`. Canvas: https://claude.ai/code/artifact/275c965b-2451-48cc-ba31-910cb3e2dc39 . Awaiting owner pick. |
 | 2026-09-09 | Phase 1 round 2: minimal light (D) + dark (E) boards added; canvas now two pages | Owner found round 1 too dense. Same canvas URL. |
 | 2026-09-09 | Direction chosen (D quiet light + toggle); SPEC.md written; dsp.js written; Phase 2 modules delegated | Three Opus agents: audio+tests, graph+sweep, page+store+export+app. |
+| 2026-09-09 | Phase 2+3 integrated: full tool runs locally; acceptance list passed in the in-app Chromium | Fixes at integration: compressor replaced by hard clipper (makeup gain skewed levels 1.6 dB), clipboard fallback, band numbers lifted off axis labels, window.dmsSweep handles for QA. Safari/Firefox not yet checked. |
