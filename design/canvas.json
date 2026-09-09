@@ -1,0 +1,78 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "A \u00b7 Bench instrument",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    {
+      "file": "LabNotebook.dc.html",
+      "title": "B \u00b7 Lab notebook",
+      "x": 1540,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    {
+      "file": "BroadcastConsole.dc.html",
+      "title": "C \u00b7 Broadcast console",
+      "x": 3080,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    {
+      "file": "WarnBench.dc.html",
+      "title": "A \u00b7 first-run warning",
+      "x": 0,
+      "y": 1040,
+      "w": 720,
+      "h": 460
+    },
+    {
+      "file": "WarnNotebook.dc.html",
+      "title": "B \u00b7 first-run warning",
+      "x": 1540,
+      "y": 1040,
+      "w": 720,
+      "h": 460
+    },
+    {
+      "file": "WarnConsole.dc.html",
+      "title": "C \u00b7 first-run warning",
+      "x": 3080,
+      "y": 1040,
+      "w": 720,
+      "h": 460
+    }
+  ],
+  "annotations": [
+    {
+      "id": "note-a",
+      "x": 760,
+      "y": 1040,
+      "w": 320,
+      "text": "A \u00b7 Bench instrument\n\nWhy: reads as a piece of test gear you trust. Engraved labels, a tape-style tuner, lamps. The tone readout is the hero.\n\nTradeoff: skeuomorphic details (knob, lamps) need restraint or they tip into kitsch. Densest of the three."
+    },
+    {
+      "id": "note-b",
+      "x": 2300,
+      "y": 1040,
+      "w": 320,
+      "text": "B \u00b7 Lab notebook\n\nWhy: warmest and most human. Layered paper sheets, serif display type, pencil-style marks on graph paper. Feels like your own notes, not a product.\n\nTradeoff: least 'tool-like'; some users may read it as less precise. Grain and paper edges must stay subtle."
+    },
+    {
+      "id": "note-c",
+      "x": 3840,
+      "y": 1040,
+      "w": 320,
+      "text": "C \u00b7 Broadcast console\n\nWhy: maximum contrast and clarity. Raised black modules, amber readouts, a big STOP. Fastest to scan while sweeping.\n\nTradeoff: the coldest of the three and closest to a generic pro-audio look; character comes from restraint and the amber-only palette."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

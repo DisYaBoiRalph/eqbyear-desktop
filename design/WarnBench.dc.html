@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>A · first-run warning</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <style>
+
+    body { margin:0; background:#1c1e21; color:#d9dcdf; font-family:'Barlow', 'Helvetica Neue', Arial, sans-serif; font-size:14px; }
+    a { color:#FCBE11; } a:hover { color:#ffd65c; }
+    .page { width:1440px; height:900px; box-sizing:border-box; padding:24px 28px; display:flex; flex-direction:column; gap:14px;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.014) 0 1px, transparent 1px 3px),
+        radial-gradient(1200px 600px at 50% -10%, #2a2d32 0%, #1c1e21 60%);
+    }
+    .top { display:flex; align-items:center; justify-content:space-between; height:44px; }
+    .brand { display:flex; align-items:center; gap:14px; }
+    .brand img { height:34px; width:auto; display:block; filter: drop-shadow(0 1px 0 rgba(0,0,0,0.6)); }
+    .wm { font-family:'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight:700; font-size:30px; letter-spacing:0.06em; color:#f2f4f5; line-height:1; }
+    .wm-sub { font-family:'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight:500; font-size:30px; letter-spacing:0.06em; color:#7c8288; line-height:1; margin-left:-6px; }
+    .top-right { display:flex; align-items:center; gap:18px; }
+    .lamp { width:10px; height:10px; border-radius:50%; background:#FCBE11; box-shadow:0 0 8px #FCBE11, inset 0 -1px 1px rgba(0,0,0,0.4); }
+    .lamp.off { background:#3a3d41; box-shadow:inset 0 1px 2px rgba(0,0,0,0.6); }
+    .lamp-row { display:flex; align-items:center; gap:8px; }
+    .eng { font-family:'Barlow Condensed', sans-serif; font-weight:600; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8a9096; text-shadow:0 1px 0 rgba(0,0,0,0.9); }
+    .btn { display:inline-flex; align-items:center; gap:8px; height:34px; padding:0 14px; border-radius:5px; border:1px solid #0b0c0d;
+      background:linear-gradient(#34373b, #24272a); color:#e6e8ea; font-family:'Barlow Condensed', sans-serif; font-weight:600; font-size:14px; letter-spacing:0.12em; text-transform:uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.09), 0 2px 4px rgba(0,0,0,0.5); cursor:pointer; }
+    .btn.primary { background:linear-gradient(#ffd24a, #f0b000); color:#1a1300; border-color:#7a5a00; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 2px 6px rgba(0,0,0,0.5); }
+    .btn.big { height:44px; padding:0 18px; font-size:15px; }
+    .panel { position:relative; border-radius:7px; border:1px solid #0b0c0d; background:linear-gradient(#2c3035, #23262a);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -1px 0 rgba(0,0,0,0.5), 0 10px 26px rgba(0,0,0,0.45); padding:16px 18px; box-sizing:border-box; }
+    .plabel { position:absolute; top:-1px; left:18px; transform:translateY(-50%); padding:0 8px; background:#25282c; font-family:'Barlow Condensed', sans-serif; font-weight:600; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:#8b9197; text-shadow:0 1px 0 rgba(0,0,0,0.9); border-radius:3px; }
+    .strip { height:156px; display:flex; align-items:stretch; gap:18px; }
+    .tape { flex:1 1 auto; border:1px solid #060707; border-radius:4px; overflow:hidden; box-shadow: inset 0 2px 8px rgba(0,0,0,0.8); }
+    .readout { display:flex; flex-direction:column; align-items:flex-end; justify-content:center; gap:4px; width:210px; }
+    .ro-win { width:100%; box-sizing:border-box; height:64px; display:flex; align-items:baseline; justify-content:flex-end; gap:8px; padding:0 14px; border-radius:4px; background:#070808; border:1px solid #000;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.05); font-family:'IBM Plex Mono', monospace; font-size:40px; font-weight:500; color:#FCBE11; text-shadow:0 0 12px rgba(252,190,17,0.45); letter-spacing:0.02em; }
+    .ro-win small { font-size:15px; color:#b98c0a; text-shadow:none; }
+    .ro-note { font-family:'IBM Plex Mono', monospace; font-size:11px; color:#6e747a; letter-spacing:0.04em; }
+    .ctl { display:flex; align-items:center; gap:22px; padding-left:18px; border-left:1px solid #0b0c0d; box-shadow:inset 1px 0 0 rgba(255,255,255,0.05); }
+    .ctl-col { display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .ctl-val { font-family:'IBM Plex Mono', monospace; font-size:12px; color:#c6cacd; }
+    .row { display:flex; gap:14px; flex:1 1 auto; min-height:0; }
+    .graph { flex:1 1 auto; display:flex; flex-direction:column; }
+    .screen { flex:1 1 auto; border:1px solid #060707; border-radius:4px; overflow:hidden; box-shadow: inset 0 2px 10px rgba(0,0,0,0.85); }
+    .col { width:432px; display:flex; flex-direction:column; gap:14px; }
+    .markrow { display:flex; gap:10px; margin-top:6px; }
+    .mk { flex:1 1 0; height:58px; border-radius:5px; border:1px solid #0b0c0d; background:linear-gradient(#34373b, #24272a); box-shadow: inset 0 1px 0 rgba(255,255,255,0.09), 0 2px 4px rgba(0,0,0,0.5);
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; }
+    .mk b { font-family:'Barlow Condensed', sans-serif; font-weight:600; font-size:14px; letter-spacing:0.14em; text-transform:uppercase; color:#e6e8ea; }
+    .mk span { font-family:'IBM Plex Mono', monospace; font-size:10px; color:#7c8288; }
+    .mk.dip b { color:#9aa0a6; }
+    .hint { margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-family:'IBM Plex Mono', monospace; font-size:11px; color:#6e747a; }
+    .bands { flex:1 1 auto; display:flex; flex-direction:column; gap:8px; padding-top:20px; }
+    .band { display:grid; grid-template-columns: 22px 44px 62px minmax(0,1fr) minmax(0,1fr) 30px 18px; align-items:center; gap:10px; height:44px; padding:0 10px; border-radius:4px; background:#141618; border:1px solid #0a0b0c; box-shadow: inset 0 1px 0 rgba(255,255,255,0.03); }
+    .band.active { box-shadow: inset 0 0 0 1px rgba(252,190,17,0.55), inset 0 1px 0 rgba(255,255,255,0.03); }
+    .bn { font-family:'Barlow Condensed', sans-serif; font-weight:700; font-size:14px; color:#7c8288; }
+    .bt { font-family:'Barlow Condensed', sans-serif; font-weight:600; font-size:11px; letter-spacing:0.12em; color:#c6cacd; background:#26292c; border:1px solid #0b0c0d; border-radius:3px; padding:3px 0; text-align:center; }
+    .bf { font-family:'IBM Plex Mono', monospace; font-size:13px; color:#e6e8ea; }
+    .sl { display:flex; flex-direction:column; gap:4px; }
+    .sl label { font-family:'Barlow Condensed', sans-serif; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#6e747a; display:flex; justify-content:space-between; }
+    .sl label span { font-family:'IBM Plex Mono', monospace; color:#c6cacd; letter-spacing:0; text-transform:none; }
+    .track { position:relative; height:4px; border-radius:2px; background:#0a0b0c; box-shadow: inset 0 1px 2px rgba(0,0,0,0.9); }
+    .fill { position:absolute; top:0; bottom:0; background:#FCBE11; border-radius:2px; }
+    .thumb { position:absolute; top:50%; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%; background:linear-gradient(#4a4e53, #2a2d31); border:1px solid #060707; box-shadow:0 1px 2px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.15); }
+    .sw { width:30px; height:16px; border-radius:8px; background:#FCBE11; box-shadow: inset 0 1px 2px rgba(0,0,0,0.4); position:relative; }
+    .sw::after { content:""; position:absolute; top:2px; right:2px; width:12px; height:12px; border-radius:50%; background:#fff5d6; box-shadow:0 1px 2px rgba(0,0,0,0.5); }
+    .sw.off { background:#2a2d31; } .sw.off::after { right:auto; left:2px; background:#8a8f94; }
+    .empty { height:44px; border-radius:4px; border:1px dashed #33373b; display:flex; align-items:center; padding:0 12px; font-family:'IBM Plex Mono', monospace; font-size:11px; color:#4f545a; }
+    .export { height:118px; display:flex; gap:18px; align-items:stretch; }
+    .pre { flex:1 1 auto; margin:0; padding:10px 14px; border-radius:4px; background:#0b0c0d; border:1px solid #000; box-shadow: inset 0 2px 8px rgba(0,0,0,0.8); font-family:'IBM Plex Mono', monospace; font-size:11.5px; line-height:1.55; color:#b9bec2; white-space:pre; overflow:hidden; }
+    .pre b { color:#FCBE11; font-weight:500; }
+    .ex-col { display:flex; flex-direction:column; gap:10px; justify-content:center; width:190px; }
+    .preamp { display:flex; align-items:center; justify-content:space-between; font-family:'Barlow Condensed', sans-serif; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#8b9197; }
+    .preamp span { font-family:'IBM Plex Mono', monospace; font-size:14px; color:#e6e8ea; letter-spacing:0; text-transform:none; background:#0b0c0d; border:1px solid #000; border-radius:3px; padding:4px 8px; }
+
+  </style>
+</helmet>
+
+<div style="width:720px; height:460px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; background:radial-gradient(800px 400px at 50% 0%, #202226 0%, #151618 70%); font-family:'Barlow', sans-serif;">
+  <div class="panel" style="width:520px; padding:26px 28px 24px; display:flex; flex-direction:column; gap:18px;">
+    <div class="plabel">Before you start</div>
+    <div style="display:flex; gap:16px; align-items:flex-start;">
+      <img src="dms-mark.png" alt="DMS" style="height:56px; width:auto; display:block; margin-top:2px;">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="font-family:'Barlow Condensed', sans-serif; font-weight:700; font-size:28px; letter-spacing:0.03em; color:#f2f4f5; line-height:1.05;">Turn your volume down first.</div>
+        <div style="font-size:14.5px; line-height:1.5; color:#b9bec2;">Sine tones at high level can damage hearing and equipment. Start quiet, then raise the level to where you normally listen to music.</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding-top:6px; border-top:1px solid #0b0c0d; box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);">
+      <div style="display:flex; align-items:center; gap:14px;"><svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" style="display:block"><defs><radialGradient id="kg" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#3a3d41"/><stop offset="1" stop-color="#1a1c1e"/></radialGradient></defs><circle cx="22.0" cy="22.0" r="21.0" fill="url(#kg)" stroke="#0a0b0c" stroke-width="1"/><line x1="22.0" y1="22.0" x2="10.7" y2="28.5" stroke="#FCBE11" stroke-width="3" stroke-linecap="round"/></svg><div><div class="eng">Level</div><div class="ctl-val" style="margin-top:2px;">−40 dB</div></div></div>
+      <button class="btn primary big"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a1300" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/></svg> I understand · start</button>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

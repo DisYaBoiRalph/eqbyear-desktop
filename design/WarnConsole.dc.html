@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>C · first-run warning</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Manrope:wght@400;500;600&display=swap">
+  <style>
+
+    body { margin:0; background:#09090a; color:#e4e4e6; font-family:'Manrope', 'Helvetica Neue', Arial, sans-serif; font-size:13px; }
+    a { color:#FCBE11; } a:hover { color:#ffd65c; }
+    .page { width:1440px; height:900px; box-sizing:border-box; padding:16px; display:grid; grid-template-columns: minmax(0,1fr) 420px; grid-template-rows: 48px 172px minmax(0,1fr) 128px; gap:12px; background:#09090a; }
+    .mod { position:relative; background:#141416; border:1px solid #232326; border-top-color:#2c2c30; box-shadow: 0 2px 0 #000, 0 14px 30px rgba(0,0,0,0.6); box-sizing:border-box; padding:14px 16px 14px; display:flex; flex-direction:column; gap:10px; min-height:0; }
+    .mh { display:flex; align-items:center; justify-content:space-between; }
+    .mt { font-family:'Bebas Neue', 'Impact', sans-serif; font-size:16px; letter-spacing:0.14em; color:#d9d9dc; line-height:1; display:flex; align-items:center; gap:10px; }
+    .mt::before { content:""; width:14px; height:3px; background:#FCBE11; }
+    .ms { font-family:'Share Tech Mono', 'Menlo', monospace; font-size:11px; color:#7d7d84; letter-spacing:0.04em; }
+    .bar { grid-column:1 / -1; background:#0e0e10; border:1px solid #232326; display:flex; align-items:center; justify-content:space-between; padding:0 16px; box-sizing:border-box; }
+    .brand { display:flex; align-items:center; gap:12px; }
+    .brand img { height:30px; width:auto; display:block; }
+    .wm { font-family:'Bebas Neue', sans-serif; font-size:30px; letter-spacing:0.12em; color:#ffffff; line-height:1; }
+    .wm span { color:#FCBE11; }
+    .stat { display:flex; align-items:center; gap:22px; }
+    .led { display:flex; align-items:center; gap:8px; font-family:'Share Tech Mono', 'Menlo', monospace; font-size:11.5px; color:#a5a5ab; letter-spacing:0.06em; }
+    .led i { width:8px; height:8px; background:#FCBE11; box-shadow:0 0 6px #FCBE11; display:inline-block; }
+    .led.off i { background:#2a2a2e; box-shadow:none; }
+    .b { display:inline-flex; align-items:center; justify-content:center; gap:8px; height:32px; padding:0 14px; border:1px solid #3a3a3f; background:#1c1c1f; color:#e4e4e6; font-family:'Bebas Neue', sans-serif; font-size:15px; letter-spacing:0.12em; cursor:pointer; box-shadow: 0 2px 0 #000; }
+    .b.amber { background:#FCBE11; border-color:#FCBE11; color:#1a1300; }
+    .b.stop { width:96px; height:96px; flex-direction:column; font-size:22px; border:2px solid #FCBE11; background:#0b0b0c; color:#FCBE11; box-shadow: 0 0 0 1px #000, 0 3px 0 #000, inset 0 0 24px rgba(252,190,17,0.08); }
+    .sweep { grid-column:1 / -1; }
+    .sweep-body { display:grid; grid-template-columns: minmax(0,1fr) 250px 112px; gap:16px; flex:1 1 auto; min-height:0; align-items:stretch; }
+    .win { background:#000; border:1px solid #2a2a2e; box-shadow: inset 0 0 0 1px #000, inset 0 0 24px rgba(0,0,0,0.9); overflow:hidden; }
+    .ro { display:flex; flex-direction:column; gap:8px; }
+    .seg { background:#000; border:1px solid #2a2a2e; height:66px; display:flex; align-items:baseline; justify-content:flex-end; gap:8px; padding:0 14px; box-sizing:border-box; font-family:'Share Tech Mono', 'Menlo', monospace; font-size:46px; color:#FCBE11; text-shadow:0 0 14px rgba(252,190,17,0.55); }
+    .seg small { font-size:14px; color:#c48f00; text-shadow:none; }
+    .meter { display:flex; flex-direction:column; gap:6px; }
+    .meter .row { display:flex; gap:3px; }
+    .meter .row i { flex:1 1 0; height:9px; background:#26261f; }
+    .meter .row i.on { background:#FCBE11; box-shadow:0 0 5px rgba(252,190,17,0.6); }
+    .meter .row i.hot { background:#ffe08a; }
+    .meter .lab { display:flex; justify-content:space-between; font-family:'Share Tech Mono', 'Menlo', monospace; font-size:10.5px; color:#7d7d84; }
+    .resp { grid-column:1; grid-row:3; }
+    .side { grid-column:2; grid-row:3; display:flex; flex-direction:column; gap:12px; min-height:0; }
+    .markrow { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:8px; }
+    .mk { height:56px; border:1px solid #3a3a3f; background:#1c1c1f; box-shadow: 0 2px 0 #000; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; }
+    .mk b { font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:18px; letter-spacing:0.12em; color:#e4e4e6; line-height:1; }
+    .mk span { font-family:'Share Tech Mono', 'Menlo', monospace; font-size:10.5px; color:#7d7d84; }
+    .mk.armed { border-color:#FCBE11; box-shadow: 0 2px 0 #000, inset 0 0 0 1px rgba(252,190,17,0.4); }
+    .bands { flex:1 1 auto; }
+    .bl { display:flex; flex-direction:column; gap:6px; }
+    .band { display:grid; grid-template-columns: 18px 42px 70px 74px 60px 26px; align-items:center; gap:8px; height:40px; padding:0 10px; background:#0e0e10; border:1px solid #232326; }
+    .band.active { border-color:#FCBE11; }
+    .bn { font-family:'Bebas Neue', sans-serif; font-size:16px; color:#7d7d84; }
+    .bt { font-family:'Bebas Neue', sans-serif; font-size:14px; letter-spacing:0.1em; color:#e4e4e6; }
+    .bv { font-family:'Share Tech Mono', 'Menlo', monospace; font-size:13px; color:#e4e4e6; background:#000; border:1px solid #2a2a2e; padding:5px 8px; box-sizing:border-box; text-align:right; }
+    .bv.g { color:#FCBE11; }
+    .tg { width:26px; height:14px; background:#FCBE11; position:relative; }
+    .tg::after { content:""; position:absolute; top:2px; right:2px; width:10px; height:10px; background:#1a1300; }
+    .empty { height:40px; border:1px dashed #2c2c30; display:flex; align-items:center; padding:0 10px; font-family:'Share Tech Mono', 'Menlo', monospace; font-size:11px; color:#55555c; }
+    .export { grid-column:1 / -1; grid-row:4; flex-direction:row; align-items:stretch; gap:16px; }
+    .export .mh { flex-direction:column; align-items:flex-start; justify-content:space-between; width:220px; }
+    .pre { flex:1 1 auto; margin:0; padding:10px 14px; background:#000; border:1px solid #2a2a2e; font-family:'Share Tech Mono', 'Menlo', monospace; font-size:12px; line-height:1.5; color:#c9c9cf; white-space:pre; overflow:hidden; }
+    .pre b { color:#FCBE11; font-weight:400; }
+    .ex-btns { display:flex; flex-direction:column; gap:8px; justify-content:center; width:170px; }
+    .pa { display:flex; align-items:center; gap:10px; font-family:'Share Tech Mono', 'Menlo', monospace; font-size:11.5px; color:#7d7d84; }
+    .pa span { color:#e4e4e6; background:#000; border:1px solid #2a2a2e; padding:5px 8px; font-size:13px; }
+
+  </style>
+</helmet>
+
+<div style="width:720px; height:460px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; background:#09090a; font-family:'Manrope', sans-serif;">
+  <div class="mod" style="width:520px; padding:18px 20px 20px; gap:14px;">
+    <div class="mh"><div class="mt">BEFORE YOU START</div><div class="ms">FIRST RUN</div></div>
+    <div style="display:flex; gap:18px; align-items:center;">
+      <img src="dms-mark.png" alt="DMS" style="height:64px; width:auto; display:block;">
+      <div style="font-family:'Bebas Neue', sans-serif; font-size:40px; letter-spacing:0.04em; line-height:0.95; color:#ffffff;">TURN YOUR<br>VOLUME <span style="color:#FCBE11">DOWN</span> FIRST.</div>
+    </div>
+    <div style="font-size:13.5px; line-height:1.55; color:#b5b5bb;">Sine tones at high level can damage hearing and equipment. Start quiet, then raise the level to where you normally listen to music.</div>
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:20px; padding-top:12px; border-top:1px solid #232326;">
+      <div style="width:230px"><div class="meter"><div class="lab"><span>LEVEL</span><span>−40 dB</span></div><div class="row"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div class="lab"><span>−40</span><span>−20</span><span>−6</span></div></div></div>
+      <span class="b amber" style="height:40px; padding:0 18px; font-size:16px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1a1300" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/></svg> I UNDERSTAND · START</span>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

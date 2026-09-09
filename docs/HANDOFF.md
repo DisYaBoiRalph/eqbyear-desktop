@@ -3,11 +3,14 @@
 Read this first when resuming. Keep it current at every checkpoint.
 
 ## Position
-- Phase 0 done. Next: Phase 1, three design-direction mockups on a design canvas.
+- Phase 1 delivered 2026-09-09: design canvas with three directions (A Bench instrument = Main, B Lab notebook, C Broadcast console) plus a first-run warning dialog per direction.
+  Canvas: https://claude.ai/code/artifact/275c965b-2451-48cc-ba31-910cb3e2dc39
+- Mock sources: `design/build_mocks.py` generates the `*.dc.html` artboards and `canvas.json` (run from `design/`). `design/dms-sweep.html` is the assembled canvas (gitignored, regenerate with the design skill helper).
+- Next: owner picks a direction (or a mix) → Phase 2 core build. Design tokens come from the chosen board's CSS in `build_mocks.py`.
 - No app code exists yet.
 
 ## Pending owner actions
-- Pick a design direction once the canvas is published.
+- Pick a design direction from the canvas (A, B, C, or a mix).
 - Decide on commit attribution trailer (see Notes).
 
 ## Machine facts
