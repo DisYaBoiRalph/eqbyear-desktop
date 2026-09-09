@@ -137,7 +137,8 @@ def graph_svg(w, h, st):
         out.append(f'<path d="{path(w, h, lambda f, b=b: band_db(b, f))}" fill="none" stroke="{st["ghost"]}" stroke-width="1" stroke-dasharray="{st.get("ghost_dash","3 4")}"/>')
     # sum curve fill + stroke
     p = path(w, h, sum_db)
-    out.append(f'<path d="{p} L{w},{h/2} L0,{h/2} Z" fill="{st["fill"]}"/>')
+    if st.get("fill") != "none":
+        out.append(f'<path d="{p} L{w},{h/2} L0,{h/2} Z" fill="{st["fill"]}"/>')
     filt = ' filter="url(#pencil)"' if st.get("pencil") else ""
     if st.get("curve_glow"):
         out.append(f'<path d="{p}" fill="none" stroke="{ACCENT}" stroke-width="7" opacity="0.14"/>')
@@ -152,7 +153,9 @@ def graph_svg(w, h, st):
         out.append(f'<line x1="{xs[1]:.1f}" y1="{ytop}" x2="{xs[1]:.1f}" y2="{ytop+14}" stroke="{st["mark"]}" stroke-width="1.5"/>')
     for i, x in enumerate(xs):
         y = h / 2 - sum_db(m[i]) / 12 * (h / 2)
-        if st.get("mark_style") == "x":
+        if st.get("mark_style") == "dot":
+            out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.5" fill="{st["mark"]}"/>')
+        elif st.get("mark_style") == "x":
             out.append(f'<path d="M{x-5:.1f},{y-5:.1f} L{x+5:.1f},{y+5:.1f} M{x+5:.1f},{y-5:.1f} L{x-5:.1f},{y+5:.1f}" stroke="{st["mark"]}" stroke-width="1.6" fill="none"{filt}/>')
         else:
             out.append(f'<line x1="{x:.1f}" y1="{ytop+14}" x2="{x:.1f}" y2="{y-6:.1f}" stroke="{st["mark"]}" stroke-width="1" stroke-dasharray="2 3" opacity="0.7"/>')
@@ -371,7 +374,7 @@ def build_a():
   </div>
 </div>
 """
-    write("Main.dc.html", wrap("A · Bench instrument", A_FONTS, A_CSS, body))
+    write("BenchInstrument.dc.html", wrap("A · Bench instrument", A_FONTS, A_CSS, body))
 
 def build_a_warn():
     body = f"""
@@ -720,29 +723,198 @@ def build_c_warn():
 """
     write("WarnConsole.dc.html", wrap("C · first-run warning", C_FONTS, C_CSS, body))
 
+
+# =============================================================================
+# ROUND 2 — Quiet (minimal), light and dark
+# =============================================================================
+M_FONTS = "https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap"
+M_MONO = "'DM Mono', 'Menlo', monospace"
+M_SANS = "'Familjen Grotesk', 'Helvetica Neue', Arial, sans-serif"
+
+THEMES = {
+    "light": dict(bg="#f6f4ef", ink="#171614", mute="#8a867e", faint="#b9b5ab", hair="#e2ded4", hair2="#cfcabf", tint="#faf9f6",
+                  ghost="rgba(23,22,20,0.22)", on_accent="#1a1300", playhead="rgba(23,22,20,0.55)"),
+    "dark":  dict(bg="#121212", ink="#ececec", mute="#7f7f7f", faint="#4a4a4a", hair="#262626", hair2="#333333", tint="#161616",
+                  ghost="rgba(236,236,236,0.22)", on_accent="#1a1300", playhead="rgba(236,236,236,0.55)"),
+}
+
+def m_st(t):
+    return dict(bg="none", tick=t["hair2"], tick_major=t["faint"], label=t["mute"], mono=M_MONO,
+                needle=t["ink"], needle_w=1.5,
+                grid=t["hair"], zero=t["hair2"], ghost=t["ghost"], ghost_dash="2 4", fill="none", curve=ACCENT, curve_w=2.2,
+                mark=t["ink"], mark_style="dot", mark_y=30, mark_fs=11, mark_names=("start", "top", "end"),
+                playhead=t["playhead"], playhead_w=1, playhead_op=1)
+
+def m_css(t):
+    return f"""
+    body {{ margin:0; background:{t["bg"]}; color:{t["ink"]}; font-family:{M_SANS}; font-size:14px; -webkit-font-smoothing:antialiased; }}
+    a {{ color:{t["ink"]}; }} a:hover {{ color:{ACCENT}; }}
+    .page {{ width:1440px; height:900px; box-sizing:border-box; padding:44px 64px 40px; display:flex; flex-direction:column; gap:0; background:{t["bg"]}; }}
+    .top {{ display:flex; align-items:center; justify-content:space-between; height:36px; }}
+    .brand {{ display:flex; align-items:center; gap:12px; }}
+    .brand img {{ height:26px; width:auto; display:block; }}
+    .wm {{ font-weight:600; font-size:17px; letter-spacing:-0.01em; }}
+    .wm span {{ font-weight:400; color:{t["mute"]}; margin-left:6px; }}
+    .nav {{ display:flex; align-items:center; gap:28px; font-size:13.5px; color:{t["mute"]}; }}
+    .nav b {{ font-weight:500; color:{t["ink"]}; display:inline-flex; align-items:center; gap:6px; }}
+    .nav .on::before {{ content:""; width:6px; height:6px; border-radius:50%; background:{ACCENT}; display:inline-block; margin-right:8px; vertical-align:middle; }}
+    .rule {{ height:1px; background:{t["hair"]}; margin:18px 0 0; }}
+    .strip {{ display:grid; grid-template-columns: minmax(0,1fr) 300px; gap:64px; align-items:end; padding:34px 0 26px; border-bottom:1px solid {t["hair"]}; }}
+    .cap {{ font-size:12px; letter-spacing:0.02em; color:{t["mute"]}; margin-bottom:12px; display:flex; justify-content:space-between; }}
+    .cap kbd {{ font-family:{M_MONO}; font-size:11px; color:{t["mute"]}; }}
+    .freq {{ display:flex; align-items:baseline; justify-content:flex-end; gap:10px; font-family:{M_MONO}; font-weight:300; font-size:72px; line-height:0.9; letter-spacing:-0.03em; color:{t["ink"]}; }}
+    .freq small {{ font-family:{M_SANS}; font-weight:400; font-size:15px; color:{t["mute"]}; letter-spacing:0; }}
+    .sub {{ display:flex; justify-content:flex-end; align-items:center; gap:22px; margin-top:16px; font-size:13px; color:{t["mute"]}; }}
+    .lvl {{ display:flex; align-items:center; gap:10px; }}
+    .lvl .bar {{ width:96px; height:1px; background:{t["hair2"]}; position:relative; }}
+    .lvl .bar::after {{ content:""; position:absolute; left:64%; top:-4px; width:9px; height:9px; border-radius:50%; background:{t["ink"]}; }}
+    .lvl span {{ font-family:{M_MONO}; color:{t["ink"]}; font-size:12.5px; }}
+    .tb {{ display:inline-flex; align-items:center; gap:7px; color:{t["ink"]}; font-weight:500; cursor:pointer; }}
+    .row {{ display:grid; grid-template-columns: minmax(0,1fr) 340px; gap:64px; flex:1 1 auto; min-height:0; padding-top:28px; }}
+    .graph {{ display:flex; flex-direction:column; min-height:0; }}
+    .aside {{ display:flex; flex-direction:column; gap:34px; }}
+    .h {{ font-size:12px; color:{t["mute"]}; margin-bottom:14px; display:flex; justify-content:space-between; }}
+    .marks {{ display:flex; gap:8px; }}
+    .mk {{ flex:1 1 0; height:44px; border:1px solid {t["hair2"]}; border-radius:999px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:13.5px; font-weight:500; color:{t["ink"]}; cursor:pointer; }}
+    .mk kbd {{ font-family:{M_MONO}; font-size:11px; color:{t["mute"]}; }}
+    .mk.next {{ border-color:{t["ink"]}; }}
+    .fn {{ font-size:12px; color:{t["mute"]}; margin-top:10px; }}
+    .list {{ display:flex; flex-direction:column; }}
+    .band {{ display:grid; grid-template-columns: 14px 34px 74px 66px 52px 1fr; align-items:center; gap:10px; height:42px; border-top:1px solid {t["hair"]}; font-family:{M_MONO}; font-size:13px; color:{t["ink"]}; }}
+    .band:last-child {{ border-bottom:1px solid {t["hair"]}; }}
+    .band .n {{ color:{t["faint"]}; font-size:11px; }}
+    .band .t {{ font-family:{M_SANS}; font-size:12.5px; color:{t["mute"]}; }}
+    .band .g {{ color:{t["ink"]}; }}
+    .band .sw {{ justify-self:end; width:26px; height:14px; border-radius:7px; background:{ACCENT}; position:relative; }}
+    .band .sw::after {{ content:""; position:absolute; top:2px; right:2px; width:10px; height:10px; border-radius:50%; background:{t["bg"]}; }}
+    .band.empty {{ font-family:{M_SANS}; color:{t["faint"]}; font-size:12.5px; grid-template-columns: 14px 1fr; }}
+    .band.cur .n {{ color:{ACCENT}; }}
+    .export {{ display:grid; grid-template-columns: minmax(0,1fr) 340px; gap:64px; align-items:center; padding-top:22px; border-top:1px solid {t["hair"]}; }}
+    .pre {{ margin:0; font-family:{M_MONO}; font-size:12px; line-height:1.6; color:{t["mute"]}; white-space:pre; }}
+    .pre b {{ color:{t["ink"]}; font-weight:400; }}
+    .acts {{ display:flex; align-items:center; gap:22px; justify-content:flex-end; }}
+    .btn {{ display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 18px; border-radius:999px; background:{t["ink"]}; color:{t["bg"]}; font-size:13.5px; font-weight:500; cursor:pointer; }}
+    .btn.y {{ background:{ACCENT}; color:{t["on_accent"]}; }}
+    .lnk {{ font-size:13.5px; font-weight:500; color:{t["ink"]}; display:inline-flex; align-items:center; gap:7px; cursor:pointer; }}
+    .pa {{ font-size:12.5px; color:{t["mute"]}; }} .pa span {{ font-family:{M_MONO}; color:{t["ink"]}; margin-left:8px; }}
+"""
+
+def m_band(b, cur=False):
+    return (f'<div class="band{" cur" if cur else ""}"><span class="n">{b["n"]}</span><span class="t">{ {"PK":"Peak","LSC":"Low shelf","HSC":"High shelf"}[b["type"]] if False else b["type"]}</span>'
+            f'<span>{fmt_hz(b["fc"])} Hz</span><span class="g">{b["gain"]:+.1f} dB</span><span>Q {b["q"]:.1f}</span><span class="sw"></span></div>')
+
+def build_min(theme, fname, title, label):
+    t = THEMES[theme]; st = m_st(t)
+    tape = tape_svg(948, 92, dict(st, tape_base=24))
+    graph = graph_svg(908, 398, st)
+    exp = export_text().replace("Preamp", "<b>Preamp</b>")
+    icol = t["ink"]
+    body = f"""
+<div class="page">
+  <div class="top">
+    <div class="brand"><img src="dms-mark.png" alt="DMS"><div class="wm">DMS<span>Sweep</span></div></div>
+    <div class="nav"><b class="on">Tone</b><b class="on">EQ on</b><span>Saved</span><b>{icon("download",icol,14)} Export</b></div>
+  </div>
+  <div class="rule"></div>
+
+  <div class="strip">
+    <div>
+      <div class="cap"><span>Drag slowly to sweep</span><kbd>← → nudge · shift coarse · space stop</kbd></div>
+      {tape}
+    </div>
+    <div>
+      <div class="freq">{fmt_hz(SWEEP_F)}<small>Hz</small></div>
+      <div class="sub"><div class="lvl">Level <div class="bar"></div><span>{LEVEL_DB} dB</span></div><span class="tb">{icon("stop",icol,13)} Stop</span></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="graph">
+      <div class="h"><span>Response</span><span>20 Hz – 20 kHz · ±12 dB</span></div>
+      {graph}
+    </div>
+    <div class="aside">
+      <div>
+        <div class="h"><span>Mark the peak you hear</span></div>
+        <div class="marks">
+          <div class="mk next">Start<kbd>1</kbd></div>
+          <div class="mk">Top<kbd>2</kbd></div>
+          <div class="mk">End<kbd>3</kbd></div>
+        </div>
+        <div class="fn">Hold D for a dip · Z undoes</div>
+      </div>
+      <div>
+        <div class="h"><span>Bands</span><span>3 of 8</span></div>
+        <div class="list">
+          {m_band(BANDS[0], True)}{m_band(BANDS[1])}{m_band(BANDS[2])}
+          <div class="band empty"><span class="n">4</span><span>Mark three points to add the next</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="export">
+    <pre class="pre">{exp}</pre>
+    <div class="acts">
+      <span class="pa">Preamp<span>{PREAMP:.1f} dB</span></span>
+      <span class="lnk">{icon("download",icol,14)} .txt</span>
+      <span class="btn y">{icon("copy",t["on_accent"],14)} Copy</span>
+    </div>
+  </div>
+</div>
+"""
+    write(fname, wrap(title, M_FONTS, m_css(t), body))
+
+def build_min_warn(theme, fname, title):
+    t = THEMES[theme]
+    body = f"""
+<div style="width:720px; height:460px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; background:{t["bg"]}; font-family:{M_SANS}; color:{t["ink"]};">
+  <div style="width:440px; display:flex; flex-direction:column; gap:18px;">
+    <img src="dms-mark.png" alt="DMS" style="height:40px; width:auto; display:block; align-self:flex-start;">
+    <div style="font-size:30px; font-weight:500; letter-spacing:-0.02em; line-height:1.1;">Turn your volume down first.</div>
+    <div style="font-size:15px; line-height:1.55; color:{t["mute"]};">Sine tones at high level can damage hearing and equipment. Start quiet, then raise the level to where you normally listen to music.</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding-top:16px; border-top:1px solid {t["hair"]};">
+      <div class="lvl" style="display:flex; align-items:center; gap:10px; font-size:13px; color:{t["mute"]};">Level <div style="width:96px; height:1px; background:{t["hair2"]}; position:relative;"><div style="position:absolute; left:8%; top:-4px; width:9px; height:9px; border-radius:50%; background:{t["ink"]};"></div></div><span style="font-family:{M_MONO}; color:{t["ink"]}; font-size:12.5px;">−40 dB</span></div>
+      <span class="btn y" style="display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 18px; border-radius:999px; background:{ACCENT}; color:{t["on_accent"]}; font-size:13.5px; font-weight:500;">I understand, start</span>
+    </div>
+  </div>
+</div>
+"""
+    write(fname, wrap(title, M_FONTS, m_css(t), body))
+
 # =============================================================================
 def build_canvas():
     W, H, GAP = 1440, 900, 100
     xs = [0, W + GAP, 2 * (W + GAP)]
     y2 = H + 140
+    R1, R2 = "round-1", "round-2"
     canvas = {
+        "pages": [{"id": R2, "name": "Round 2 · quiet"}, {"id": R1, "name": "Round 1 · dense"}],
         "artboards": [
-            {"file": "Main.dc.html", "title": "A · Bench instrument", "x": xs[0], "y": 0, "w": W, "h": H},
-            {"file": "LabNotebook.dc.html", "title": "B · Lab notebook", "x": xs[1], "y": 0, "w": W, "h": H},
-            {"file": "BroadcastConsole.dc.html", "title": "C · Broadcast console", "x": xs[2], "y": 0, "w": W, "h": H},
-            {"file": "WarnBench.dc.html", "title": "A · first-run warning", "x": xs[0], "y": y2, "w": 720, "h": 460},
-            {"file": "WarnNotebook.dc.html", "title": "B · first-run warning", "x": xs[1], "y": y2, "w": 720, "h": 460},
-            {"file": "WarnConsole.dc.html", "title": "C · first-run warning", "x": xs[2], "y": y2, "w": 720, "h": 460},
+            {"file": "Main.dc.html", "title": "D · Quiet, light", "x": xs[0], "y": 0, "w": W, "h": H, "page": R2},
+            {"file": "QuietDark.dc.html", "title": "E · Quiet, dark", "x": xs[1], "y": 0, "w": W, "h": H, "page": R2},
+            {"file": "WarnQuietLight.dc.html", "title": "D · first-run warning", "x": xs[0], "y": y2, "w": 720, "h": 460, "page": R2},
+            {"file": "WarnQuietDark.dc.html", "title": "E · first-run warning", "x": xs[1], "y": y2, "w": 720, "h": 460, "page": R2},
+            {"file": "BenchInstrument.dc.html", "title": "A · Bench instrument", "x": xs[0], "y": 0, "w": W, "h": H, "page": R1},
+            {"file": "LabNotebook.dc.html", "title": "B · Lab notebook", "x": xs[1], "y": 0, "w": W, "h": H, "page": R1},
+            {"file": "BroadcastConsole.dc.html", "title": "C · Broadcast console", "x": xs[2], "y": 0, "w": W, "h": H, "page": R1},
+            {"file": "WarnBench.dc.html", "title": "A · first-run warning", "x": xs[0], "y": y2, "w": 720, "h": 460, "page": R1},
+            {"file": "WarnNotebook.dc.html", "title": "B · first-run warning", "x": xs[1], "y": y2, "w": 720, "h": 460, "page": R1},
+            {"file": "WarnConsole.dc.html", "title": "C · first-run warning", "x": xs[2], "y": y2, "w": 720, "h": 460, "page": R1},
         ],
         "annotations": [
-            {"id": "note-a", "x": xs[0] + 760, "y": y2, "w": 320,
+            {"id": "note-d", "x": xs[0] + 760, "y": y2, "w": 320, "page": R2,
+             "text": "D · Quiet, light\n\nOne grotesk, one mono, hairlines, no boxes. Warm off-white so it reads as paper, not a web app. Yellow only where it means something: the curve, the current band, Copy.\n\nTradeoff: a light page next to a dark music player or DAW can feel bright during a long session."},
+            {"id": "note-e", "x": xs[1] + 760, "y": y2, "w": 320, "page": R2,
+             "text": "E · Quiet, dark\n\nSame design on neutral near-black. Easier on the eyes for long sweeps and the yellow curve carries more.\n\nTradeoff: dark plus thin hairlines needs care on cheap displays; gray text contrast is the thing to watch."},
+            {"id": "note-a", "x": xs[0] + 760, "y": y2, "w": 320, "page": R1,
              "text": "A · Bench instrument\n\nWhy: reads as a piece of test gear you trust. Engraved labels, a tape-style tuner, lamps. The tone readout is the hero.\n\nTradeoff: skeuomorphic details (knob, lamps) need restraint or they tip into kitsch. Densest of the three."},
-            {"id": "note-b", "x": xs[1] + 760, "y": y2, "w": 320,
+            {"id": "note-b", "x": xs[1] + 760, "y": y2, "w": 320, "page": R1,
              "text": "B · Lab notebook\n\nWhy: warmest and most human. Layered paper sheets, serif display type, pencil-style marks on graph paper. Feels like your own notes, not a product.\n\nTradeoff: least 'tool-like'; some users may read it as less precise. Grain and paper edges must stay subtle."},
-            {"id": "note-c", "x": xs[2] + 760, "y": y2, "w": 320,
+            {"id": "note-c", "x": xs[2] + 760, "y": y2, "w": 320, "page": R1,
              "text": "C · Broadcast console\n\nWhy: maximum contrast and clarity. Raised black modules, amber readouts, a big STOP. Fastest to scan while sweeping.\n\nTradeoff: the coldest of the three and closest to a generic pro-audio look; character comes from restraint and the amber-only palette."},
         ],
-        "launch": {"view": "canvas"},
+        "launch": {"view": "canvas", "page": R2},
     }
     with open(os.path.join(HERE, "canvas.json"), "w") as f:
         json.dump(canvas, f, indent=2)
@@ -752,5 +924,9 @@ if __name__ == "__main__":
     build_a(); build_a_warn()
     build_b(); build_b_warn()
     build_c(); build_c_warn()
+    build_min("light", "Main.dc.html", "D · Quiet, light", "D")
+    build_min("dark", "QuietDark.dc.html", "E · Quiet, dark", "E")
+    build_min_warn("light", "WarnQuietLight.dc.html", "D · first-run warning")
+    build_min_warn("dark", "WarnQuietDark.dc.html", "E · first-run warning")
     build_canvas()
     print("\n" + export_text())

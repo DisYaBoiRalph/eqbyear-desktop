@@ -36,3 +36,4 @@ dips. Output: generic 8-band PEQ text. Rev 1 is the tool with minimal prose.
 |------|-------|-------|
 | 2026-09-09 | Phase 0: folder, git, records, launch config | Logo moved to `assets/`. |
 | 2026-09-09 | Phase 1: three design directions on a design canvas | Artboards + generator in `design/`. Canvas: https://claude.ai/code/artifact/275c965b-2451-48cc-ba31-910cb3e2dc39 . Awaiting owner pick. |
+| 2026-09-09 | Phase 1 round 2: minimal light (D) + dark (E) boards added; canvas now two pages | Owner found round 1 too dense. Same canvas URL. |

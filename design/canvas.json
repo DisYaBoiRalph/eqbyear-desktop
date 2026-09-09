@@ -1,12 +1,59 @@
 {
+  "pages": [
+    {
+      "id": "round-2",
+      "name": "Round 2 \u00b7 quiet"
+    },
+    {
+      "id": "round-1",
+      "name": "Round 1 \u00b7 dense"
+    }
+  ],
   "artboards": [
     {
       "file": "Main.dc.html",
+      "title": "D \u00b7 Quiet, light",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "round-2"
+    },
+    {
+      "file": "QuietDark.dc.html",
+      "title": "E \u00b7 Quiet, dark",
+      "x": 1540,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "round-2"
+    },
+    {
+      "file": "WarnQuietLight.dc.html",
+      "title": "D \u00b7 first-run warning",
+      "x": 0,
+      "y": 1040,
+      "w": 720,
+      "h": 460,
+      "page": "round-2"
+    },
+    {
+      "file": "WarnQuietDark.dc.html",
+      "title": "E \u00b7 first-run warning",
+      "x": 1540,
+      "y": 1040,
+      "w": 720,
+      "h": 460,
+      "page": "round-2"
+    },
+    {
+      "file": "BenchInstrument.dc.html",
       "title": "A \u00b7 Bench instrument",
       "x": 0,
       "y": 0,
       "w": 1440,
-      "h": 900
+      "h": 900,
+      "page": "round-1"
     },
     {
       "file": "LabNotebook.dc.html",
@@ -14,7 +61,8 @@
       "x": 1540,
       "y": 0,
       "w": 1440,
-      "h": 900
+      "h": 900,
+      "page": "round-1"
     },
     {
       "file": "BroadcastConsole.dc.html",
@@ -22,7 +70,8 @@
       "x": 3080,
       "y": 0,
       "w": 1440,
-      "h": 900
+      "h": 900,
+      "page": "round-1"
     },
     {
       "file": "WarnBench.dc.html",
@@ -30,7 +79,8 @@
       "x": 0,
       "y": 1040,
       "w": 720,
-      "h": 460
+      "h": 460,
+      "page": "round-1"
     },
     {
       "file": "WarnNotebook.dc.html",
@@ -38,7 +88,8 @@
       "x": 1540,
       "y": 1040,
       "w": 720,
-      "h": 460
+      "h": 460,
+      "page": "round-1"
     },
     {
       "file": "WarnConsole.dc.html",
@@ -46,15 +97,33 @@
       "x": 3080,
       "y": 1040,
       "w": 720,
-      "h": 460
+      "h": 460,
+      "page": "round-1"
     }
   ],
   "annotations": [
+    {
+      "id": "note-d",
+      "x": 760,
+      "y": 1040,
+      "w": 320,
+      "page": "round-2",
+      "text": "D \u00b7 Quiet, light\n\nOne grotesk, one mono, hairlines, no boxes. Warm off-white so it reads as paper, not a web app. Yellow only where it means something: the curve, the current band, Copy.\n\nTradeoff: a light page next to a dark music player or DAW can feel bright during a long session."
+    },
+    {
+      "id": "note-e",
+      "x": 2300,
+      "y": 1040,
+      "w": 320,
+      "page": "round-2",
+      "text": "E \u00b7 Quiet, dark\n\nSame design on neutral near-black. Easier on the eyes for long sweeps and the yellow curve carries more.\n\nTradeoff: dark plus thin hairlines needs care on cheap displays; gray text contrast is the thing to watch."
+    },
     {
       "id": "note-a",
       "x": 760,
       "y": 1040,
       "w": 320,
+      "page": "round-1",
       "text": "A \u00b7 Bench instrument\n\nWhy: reads as a piece of test gear you trust. Engraved labels, a tape-style tuner, lamps. The tone readout is the hero.\n\nTradeoff: skeuomorphic details (knob, lamps) need restraint or they tip into kitsch. Densest of the three."
     },
     {
@@ -62,6 +131,7 @@
       "x": 2300,
       "y": 1040,
       "w": 320,
+      "page": "round-1",
       "text": "B \u00b7 Lab notebook\n\nWhy: warmest and most human. Layered paper sheets, serif display type, pencil-style marks on graph paper. Feels like your own notes, not a product.\n\nTradeoff: least 'tool-like'; some users may read it as less precise. Grain and paper edges must stay subtle."
     },
     {
@@ -69,10 +139,12 @@
       "x": 3840,
       "y": 1040,
       "w": 320,
+      "page": "round-1",
       "text": "C \u00b7 Broadcast console\n\nWhy: maximum contrast and clarity. Raised black modules, amber readouts, a big STOP. Fastest to scan while sweeping.\n\nTradeoff: the coldest of the three and closest to a generic pro-audio look; character comes from restraint and the amber-only palette."
     }
   ],
   "launch": {
-    "view": "canvas"
+    "view": "canvas",
+    "page": "round-2"
   }
 }
