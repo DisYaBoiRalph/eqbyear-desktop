@@ -20,8 +20,8 @@ dips. Output: generic 8-band PEQ text. Rev 1 is the tool with minimal prose.
 - Re-sweep with EQ engaged; global EQ on/off, per-band enable.
 - Export: generic PEQ text (Equalizer APO style), copy + download; session JSON; localStorage autosave.
 - Out of rev 1: music preview, L/R sweeps, phone layout.
-- Dark theme, DMS logo from `assets/dms-logo-2026.png`, accent #FCBE11.
-- Mockups first (three directions on a design canvas), owner picks, then build.
+- Direction chosen 2026-09-09: 'Quiet' minimal. Light by default with a user theme toggle to dark. System Arial stack, mono only for export text. Logo inside a 34 px black circle. Accent #FCBE11 only for curve / selected band / Copy / status dots.
+- Build spec: `docs/SPEC.md` (API contracts per module, tokens, acceptance list).
 - Stack: vanilla HTML/CSS/JS ES modules, no build step, `python3 -m http.server`.
 
 ## Phases
@@ -37,3 +37,4 @@ dips. Output: generic 8-band PEQ text. Rev 1 is the tool with minimal prose.
 | 2026-09-09 | Phase 0: folder, git, records, launch config | Logo moved to `assets/`. |
 | 2026-09-09 | Phase 1: three design directions on a design canvas | Artboards + generator in `design/`. Canvas: https://claude.ai/code/artifact/275c965b-2451-48cc-ba31-910cb3e2dc39 . Awaiting owner pick. |
 | 2026-09-09 | Phase 1 round 2: minimal light (D) + dark (E) boards added; canvas now two pages | Owner found round 1 too dense. Same canvas URL. |
+| 2026-09-09 | Direction chosen (D quiet light + toggle); SPEC.md written; dsp.js written; Phase 2 modules delegated | Three Opus agents: audio+tests, graph+sweep, page+store+export+app. |

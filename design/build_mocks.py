@@ -189,6 +189,8 @@ def icon(name, color="currentColor", size=16):
         "x": '<path d="M6 6l12 12M18 6 6 18"/>',
         "power": '<path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/>',
         "chev": '<path d="m6 9 6 6 6-6"/>',
+        "sun": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+        "moon": '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
         "undo": '<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
     }[name]
     return f'<svg width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">{p}</svg>'
@@ -204,7 +206,7 @@ def wrap(title, fonts_href, css, body):
 <x-dc>
 <helmet>
   <title>{title}</title>
-  <link rel="stylesheet" href="{fonts_href}">
+  {f'<link rel="stylesheet" href="{fonts_href}">' if fonts_href else ''}
   <style>
 {css}
   </style>
@@ -727,9 +729,9 @@ def build_c_warn():
 # =============================================================================
 # ROUND 2 — Quiet (minimal), light and dark
 # =============================================================================
-M_FONTS = "https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap"
-M_MONO = "'DM Mono', 'Menlo', monospace"
-M_SANS = "'Familjen Grotesk', 'Helvetica Neue', Arial, sans-serif"
+M_FONTS = ""
+M_MONO = "Menlo, Consolas, 'Courier New', monospace"
+M_SANS = "Arial, 'Helvetica Neue', Helvetica, sans-serif"
 
 THEMES = {
     "light": dict(bg="#f6f4ef", ink="#171614", mute="#8a867e", faint="#b9b5ab", hair="#e2ded4", hair2="#cfcabf", tint="#faf9f6",
@@ -752,8 +754,9 @@ def m_css(t):
     .page {{ width:1440px; height:900px; box-sizing:border-box; padding:44px 64px 40px; display:flex; flex-direction:column; gap:0; background:{t["bg"]}; }}
     .top {{ display:flex; align-items:center; justify-content:space-between; height:36px; }}
     .brand {{ display:flex; align-items:center; gap:12px; }}
-    .brand img {{ height:26px; width:auto; display:block; }}
-    .wm {{ font-weight:600; font-size:17px; letter-spacing:-0.01em; }}
+    .mark {{ width:34px; height:34px; border-radius:50%; background:#111; display:flex; align-items:center; justify-content:center; box-shadow: 0 0 0 1px {t["hair2"]}; }}
+    .mark img {{ height:19px; width:auto; display:block; }}
+    .wm {{ font-weight:700; font-size:17px; letter-spacing:-0.01em; }}
     .wm span {{ font-weight:400; color:{t["mute"]}; margin-left:6px; }}
     .nav {{ display:flex; align-items:center; gap:28px; font-size:13.5px; color:{t["mute"]}; }}
     .nav b {{ font-weight:500; color:{t["ink"]}; display:inline-flex; align-items:center; gap:6px; }}
@@ -761,14 +764,14 @@ def m_css(t):
     .rule {{ height:1px; background:{t["hair"]}; margin:18px 0 0; }}
     .strip {{ display:grid; grid-template-columns: minmax(0,1fr) 300px; gap:64px; align-items:end; padding:34px 0 26px; border-bottom:1px solid {t["hair"]}; }}
     .cap {{ font-size:12px; letter-spacing:0.02em; color:{t["mute"]}; margin-bottom:12px; display:flex; justify-content:space-between; }}
-    .cap kbd {{ font-family:{M_MONO}; font-size:11px; color:{t["mute"]}; }}
-    .freq {{ display:flex; align-items:baseline; justify-content:flex-end; gap:10px; font-family:{M_MONO}; font-weight:300; font-size:72px; line-height:0.9; letter-spacing:-0.03em; color:{t["ink"]}; }}
+    .cap kbd {{ font-family:{M_SANS}; font-size:11.5px; color:{t["mute"]}; }}
+    .freq {{ display:flex; align-items:baseline; justify-content:flex-end; gap:10px; font-family:{M_SANS}; font-weight:400; font-size:64px; line-height:0.9; letter-spacing:-0.03em; color:{t["ink"]}; font-variant-numeric:tabular-nums; }}
     .freq small {{ font-family:{M_SANS}; font-weight:400; font-size:15px; color:{t["mute"]}; letter-spacing:0; }}
     .sub {{ display:flex; justify-content:flex-end; align-items:center; gap:22px; margin-top:16px; font-size:13px; color:{t["mute"]}; }}
     .lvl {{ display:flex; align-items:center; gap:10px; }}
     .lvl .bar {{ width:96px; height:1px; background:{t["hair2"]}; position:relative; }}
     .lvl .bar::after {{ content:""; position:absolute; left:64%; top:-4px; width:9px; height:9px; border-radius:50%; background:{t["ink"]}; }}
-    .lvl span {{ font-family:{M_MONO}; color:{t["ink"]}; font-size:12.5px; }}
+    .lvl span {{ font-family:{M_SANS}; color:{t["ink"]}; font-size:12.5px; font-variant-numeric:tabular-nums; }}
     .tb {{ display:inline-flex; align-items:center; gap:7px; color:{t["ink"]}; font-weight:500; cursor:pointer; }}
     .row {{ display:grid; grid-template-columns: minmax(0,1fr) 340px; gap:64px; flex:1 1 auto; min-height:0; padding-top:28px; }}
     .graph {{ display:flex; flex-direction:column; min-height:0; }}
@@ -776,13 +779,13 @@ def m_css(t):
     .h {{ font-size:12px; color:{t["mute"]}; margin-bottom:14px; display:flex; justify-content:space-between; }}
     .marks {{ display:flex; gap:8px; }}
     .mk {{ flex:1 1 0; height:44px; border:1px solid {t["hair2"]}; border-radius:999px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:13.5px; font-weight:500; color:{t["ink"]}; cursor:pointer; }}
-    .mk kbd {{ font-family:{M_MONO}; font-size:11px; color:{t["mute"]}; }}
+    .mk kbd {{ font-family:{M_SANS}; font-size:11.5px; color:{t["mute"]}; }}
     .mk.next {{ border-color:{t["ink"]}; }}
     .fn {{ font-size:12px; color:{t["mute"]}; margin-top:10px; }}
     .list {{ display:flex; flex-direction:column; }}
-    .band {{ display:grid; grid-template-columns: 14px 34px 74px 66px 52px 1fr; align-items:center; gap:10px; height:42px; border-top:1px solid {t["hair"]}; font-family:{M_MONO}; font-size:13px; color:{t["ink"]}; }}
+    .band {{ display:grid; grid-template-columns: 14px 34px 74px 66px 52px 1fr; align-items:center; gap:10px; height:42px; border-top:1px solid {t["hair"]}; font-family:{M_SANS}; font-size:13.5px; color:{t["ink"]}; font-variant-numeric:tabular-nums; }}
     .band:last-child {{ border-bottom:1px solid {t["hair"]}; }}
-    .band .n {{ color:{t["faint"]}; font-size:11px; }}
+    .band .n {{ color:{t["faint"]}; font-size:11.5px; }}
     .band .t {{ font-family:{M_SANS}; font-size:12.5px; color:{t["mute"]}; }}
     .band .g {{ color:{t["ink"]}; }}
     .band .sw {{ justify-self:end; width:26px; height:14px; border-radius:7px; background:{ACCENT}; position:relative; }}
@@ -796,7 +799,7 @@ def m_css(t):
     .btn {{ display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 18px; border-radius:999px; background:{t["ink"]}; color:{t["bg"]}; font-size:13.5px; font-weight:500; cursor:pointer; }}
     .btn.y {{ background:{ACCENT}; color:{t["on_accent"]}; }}
     .lnk {{ font-size:13.5px; font-weight:500; color:{t["ink"]}; display:inline-flex; align-items:center; gap:7px; cursor:pointer; }}
-    .pa {{ font-size:12.5px; color:{t["mute"]}; }} .pa span {{ font-family:{M_MONO}; color:{t["ink"]}; margin-left:8px; }}
+    .pa {{ font-size:12.5px; color:{t["mute"]}; }} .pa span {{ color:{t["ink"]}; margin-left:8px; }}
 """
 
 def m_band(b, cur=False):
@@ -812,8 +815,8 @@ def build_min(theme, fname, title, label):
     body = f"""
 <div class="page">
   <div class="top">
-    <div class="brand"><img src="dms-mark.png" alt="DMS"><div class="wm">DMS<span>Sweep</span></div></div>
-    <div class="nav"><b class="on">Tone</b><b class="on">EQ on</b><span>Saved</span><b>{icon("download",icol,14)} Export</b></div>
+    <div class="brand"><span class="mark"><img src="dms-mark.png" alt="DMS"></span><div class="wm">DMS<span>Sweep</span></div></div>
+    <div class="nav"><b class="on">Tone</b><b class="on">EQ on</b><span>Saved</span><b>{icon("download",icol,14)} Export</b><b title="Theme">{icon("moon" if theme=="light" else "sun",icol,15)}</b></div>
   </div>
   <div class="rule"></div>
 
@@ -870,7 +873,7 @@ def build_min_warn(theme, fname, title):
     body = f"""
 <div style="width:720px; height:460px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; background:{t["bg"]}; font-family:{M_SANS}; color:{t["ink"]};">
   <div style="width:440px; display:flex; flex-direction:column; gap:18px;">
-    <img src="dms-mark.png" alt="DMS" style="height:40px; width:auto; display:block; align-self:flex-start;">
+    <span style="width:48px; height:48px; border-radius:50%; background:#111; display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 1px {t["hair2"]};"><img src="dms-mark.png" alt="DMS" style="height:26px; width:auto; display:block;"></span>
     <div style="font-size:30px; font-weight:500; letter-spacing:-0.02em; line-height:1.1;">Turn your volume down first.</div>
     <div style="font-size:15px; line-height:1.55; color:{t["mute"]};">Sine tones at high level can damage hearing and equipment. Start quiet, then raise the level to where you normally listen to music.</div>
     <div style="display:flex; align-items:center; justify-content:space-between; padding-top:16px; border-top:1px solid {t["hair"]};">
