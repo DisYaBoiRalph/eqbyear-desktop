@@ -44,7 +44,8 @@ ear, and turns the result into a parametric EQ they can paste into any PEQ app.
 | 2026-09-09 | Export as generic PEQ text (Equalizer APO style), copy and download. Session JSON export/import. Browser autosave. |
 | 2026-09-09 | Out of rev 1: music preview, separate L/R sweeps, phone layout. |
 | 2026-09-09 | Design: "Quiet" direction. Light by default with a dark toggle. System Arial stack, monospace only for the export text. Logo inside a black circle. Accent #FCBE11 only where it means something. |
-| 2026-09-09 | Stack: vanilla HTML/CSS/JS ES modules, no build step, no dependencies. Localhost for testing; domain later. |
+| 2026-09-09 | Stack: vanilla HTML/CSS/JS ES modules, no build step, no dependencies. Localhost for testing. |
+| 2026-09-09 | Domain: owner registered **eqbyear.com**. Site name on the page is just "DMS". |
 
 ---
 
@@ -89,7 +90,7 @@ Keyboard: click or drag the tape to sweep · ← → nudge (Shift for coarse) ·
 | 2 | Core build: audio, sweep, graph, marking, bands, re-sweep | Done 2026-09-09 |
 | 3 | Export and persistence | Done 2026-09-09 |
 | 4 | Polish and QA after owner's first real use; Safari and Firefox pass | Next |
-| 5 | Hosting and domain | Later |
+| 5 | Hosting on eqbyear.com (static host, e.g. Cloudflare Pages or GitHub Pages; DNS at the registrar) | Later |
 | 6 | Info sections (the method explained, tips) | Later |
 
 ---
@@ -106,6 +107,7 @@ One row per shipped slice. Newest last.
 | 2026-09-09 | `docs/SPEC.md` and `js/dsp.js` | Spec is the contract; dsp ported 1:1 from the mock's Python. |
 | 2026-09-09 | Modules built in parallel: audio + tests, graph + sweep, page + store + export + app | Delegated per module, reviewed and integrated in the main session. |
 | 2026-09-09 | Integration and acceptance in the in-app Chromium | All items in SPEC.md acceptance passed. Fixes: compressor replaced by a hard clipper (its makeup gain skewed levels 1.6 dB), clipboard fallback, band numbers lifted off the axis labels. |
+| 2026-09-09 | Top bar: wordmark is just "DMS", Tutorial button added (link TBD) | Owner review of the first build: "brilliant" otherwise. |
 
 ---
 
@@ -118,9 +120,12 @@ One row per shipped slice. Newest last.
 - Owner: try it with headphones and note what feels wrong (sweep feel, mark flow, how
   gain is adjusted, anything visual). Review the canvas if useful.
 - Then: Phase 4 polish from that feedback. Safari and Firefox sanity pass. Decide on
-  hosting (Cloudflare Pages or GitHub Pages both fit a static site) and a domain.
+  hosting for eqbyear.com (Cloudflare Pages or GitHub Pages both fit a static site).
 
 **Open questions**
+
+- Tutorial button (top bar, next to the wordmark) links to `#` until the owner supplies the
+  YouTube URL. Set it on `#tutorialLink` in `index.html`.
 
 - Commit attribution: the Claude Code harness appends a `Co-Authored-By` trailer to
   commits, which conflicts with the owner's global no-attribution rule. All commits so far
