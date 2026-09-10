@@ -108,6 +108,7 @@ One row per shipped slice. Newest last.
 | 2026-09-09 | Modules built in parallel: audio + tests, graph + sweep, page + store + export + app | Delegated per module, reviewed and integrated in the main session. |
 | 2026-09-09 | Integration and acceptance in the in-app Chromium | All items in SPEC.md acceptance passed. Fixes: compressor replaced by a hard clipper (its makeup gain skewed levels 1.6 dB), clipboard fallback, band numbers lifted off the axis labels. |
 | 2026-09-09 | Top bar: wordmark is just "DMS", Tutorial button added (link TBD) | Owner review of the first build: "brilliant" otherwise. |
+| 2026-09-09 | Floatplane and Patreon buttons in the top bar; hidden affiliate gear section scaffolded | Gear section unpublished until links exist. |
 
 ---
 
@@ -125,7 +126,11 @@ One row per shipped slice. Newest last.
 **Open questions**
 
 - Tutorial button (top bar, next to the wordmark) links to `#` until the owner supplies the
-  YouTube URL. Set it on `#tutorialLink` in `index.html`.
+  YouTube URL. Set it on `#tutorialLink` in `index.html`. Floatplane and Patreon buttons sit
+  beside it (https://www.floatplane.com/channel/DMS3, https://www.patreon.com/DMS3TV).
+- Affiliate "Run this EQ on" section exists in `index.html` as `#gear` with the `hidden`
+  attribute; it stays unpublished until the owner has affiliate links (Qudelix etc.; the
+  owner's favourite PEQ device is not on Amazon). Remove `hidden` and fill `.gear-list`.
 
 - Commit attribution: the Claude Code harness appends a `Co-Authored-By` trailer to
   commits, which conflicts with the owner's global no-attribution rule. All commits so far

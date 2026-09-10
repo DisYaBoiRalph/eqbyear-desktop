@@ -63,8 +63,8 @@ svg[hidden] { display: none; }
 .mark img { height: 19px; width: auto; display: block; }
 
 .wm { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+.links { display: flex; align-items: center; gap: 8px; margin-left: 10px; }
 .tut {
-  margin-left: 10px;
   height: 28px;
   padding: 0 12px;
   display: inline-flex;
@@ -362,3 +362,11 @@ svg[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* gear (affiliate) section, hidden until populated */
+.gear { padding-top: 22px; margin-top: 22px; border-top: 1px solid var(--hair); }
+.gear-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 32px; }
+.gear-item { display: flex; flex-direction: column; gap: 3px; padding: 12px 0; border-top: 1px solid var(--hair); color: var(--ink); text-decoration: none; }
+.gear-item b { font-weight: 700; font-size: 14px; }
+.gear-item span { font-size: 12.5px; color: var(--mute); }
+.gear-item:hover b { text-decoration: underline; }
