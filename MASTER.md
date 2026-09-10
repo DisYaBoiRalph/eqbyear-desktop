@@ -68,6 +68,10 @@ design/             mock generator (build_mocks.py) and artboards; dms-sweep.htm
 docs/SPEC.md        the build contract (APIs, tokens, acceptance list)
 ```
 
+Deploy: `npx wrangler deploy` from the repo root (Wrangler is logged in on this Mac;
+`wrangler.jsonc` names the Worker and both custom domains; `.assetsignore` keeps non-site
+files out of the upload).
+
 Run locally:
 
 ```
@@ -90,7 +94,7 @@ Keyboard: click or drag the tape to sweep · ← → nudge (Shift for coarse) ·
 | 2 | Core build: audio, sweep, graph, marking, bands, re-sweep | Done 2026-09-09 |
 | 3 | Export and persistence | Done 2026-09-09 |
 | 4 | Polish and QA after owner's first real use; Safari and Firefox pass | Next |
-| 5 | Hosting on eqbyear.com (static host, e.g. Cloudflare Pages or GitHub Pages; DNS at the registrar) | Later |
+| 5 | Hosting on eqbyear.com | Done 2026-09-09 (Cloudflare Workers static assets, custom domains apex + www) |
 | 6 | Info sections (the method explained, tips) | Later |
 
 ---
@@ -109,6 +113,7 @@ One row per shipped slice. Newest last.
 | 2026-09-09 | Integration and acceptance in the in-app Chromium | All items in SPEC.md acceptance passed. Fixes: compressor replaced by a hard clipper (its makeup gain skewed levels 1.6 dB), clipboard fallback, band numbers lifted off the axis labels. |
 | 2026-09-09 | Top bar: wordmark is just "DMS", Tutorial button added (link TBD) | Owner review of the first build: "brilliant" otherwise. |
 | 2026-09-09 | Floatplane and Patreon buttons in the top bar; hidden affiliate gear section scaffolded | Gear section unpublished until links exist. |
+| 2026-09-09 | Live on https://eqbyear.com | Cloudflare Workers static assets, Worker `eqbyear`, config `wrangler.jsonc`, upload filter `.assetsignore`. Deploy: `npx wrangler deploy` from the repo root. |
 
 ---
 
@@ -120,8 +125,9 @@ One row per shipped slice. Newest last.
 
 - Owner: try it with headphones and note what feels wrong (sweep feel, mark flow, how
   gain is adjusted, anything visual). Review the canvas if useful.
-- Then: Phase 4 polish from that feedback. Safari and Firefox sanity pass. Decide on
-  hosting for eqbyear.com (Cloudflare Pages or GitHub Pages both fit a static site).
+- Then: Phase 4 polish from that feedback. Safari and Firefox sanity pass.
+- Optional: a redirect rule so www.eqbyear.com redirects to eqbyear.com (both currently
+  serve the site).
 
 **Open questions**
 
