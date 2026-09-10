@@ -115,7 +115,7 @@ One row per shipped slice. Newest last.
 | 2026-09-09 | Top bar: wordmark is just "DMS", Tutorial button added (link TBD) | Owner review of the first build: "brilliant" otherwise. |
 | 2026-09-09 | Floatplane and Patreon buttons in the top bar; hidden affiliate gear section scaffolded | Gear section unpublished until links exist. |
 | 2026-09-09 | Round 3 design direction: F · Fastgraph (tokens + button recipe lifted from DMS Fastgraph's default dark theme) | Feedback on the live site: still reads "vibe coded". Canvas page "Round 3 · Fastgraph". Awaiting owner pick; if approved, port offline, verify, then deploy. |
-| 2026-09-09 | Fastgraph theme ported to the site and deployed | Dark default, light via toggle. Gate starts at −20 dB. Cache-busting `?v=` on CSS/JS links. Verified with headless Chrome renders + in-pane functional checks (marks, export, theme toggle). |
+| 2026-09-09 | Fastgraph theme ported to the site and deployed | Dark default, light via toggle. Gate starts at −20 dB. Cache-busting `?v=` on CSS/JS links (bump the query when CSS/JS change). One-time localStorage flag `dms-sweep:theme-v2` moves pre-existing sessions to dark. Verified with headless Chrome renders + in-pane functional checks (marks, export, theme toggle). |
 | 2026-09-09 | Live on https://eqbyear.com | Cloudflare Workers static assets, Worker `eqbyear`, config `wrangler.jsonc`, upload filter `.assetsignore`. Deploy: `npx wrangler deploy` from the repo root. |
 
 ---
