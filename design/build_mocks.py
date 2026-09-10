@@ -1101,6 +1101,151 @@ def build_f_warn():
 """
     write("WarnFastgraph.dc.html", wrap("F · first-run warning", F_FONTS, F_CSS, body))
 
+
+# =============================================================================
+# FOR FUN — G · FastGraph 95 (tokens from FASTGRAPH_95_TOKENS, bevels from
+# _fastgraph95_stylesheet and ModernButton._paint_fastgraph95)
+# =============================================================================
+G = dict(desktop="#008080", face="#C0C0C0", hover="#D4D4D4", alt="#A0A0A0", white="#FFFFFF", text="#000000", muted="#404040",
+         disabled="#808080", navy="#000080", danger="#800000", positive="#008000", warning="#808000", plot_bg="#FFFFFF", plot_grid="#808080",
+         hi="#ffffff", midhi="#dfdfdf", midlo="#808080", lo="#000000")
+G_FONT = "Tahoma, 'Microsoft Sans Serif', 'MS Sans Serif', Verdana, sans-serif"
+G_ST = dict(bg=G["plot_bg"], tick=G["plot_grid"], tick_major=G["text"], label=G["text"], mono=G_FONT, label_fs=11,
+            needle=G["navy"], needle_w=2,
+            grid=G["plot_grid"], zero=G["text"], ghost="rgba(0,0,0,0.45)", ghost_dash="1 2", fill="none", curve=G["navy"], curve_w=2,
+            mark=G["danger"], mark_style="x", mark_y=30, mark_fs=11, mark_names=("start", "top", "end"),
+            playhead=G["text"], playhead_w=1, playhead_op=1)
+
+G_CSS = f"""
+    body {{ margin:0; background:{G["desktop"]}; color:{G["text"]}; font-family:{G_FONT}; font-size:12px; -webkit-font-smoothing:none; }}
+    a {{ color:{G["navy"]}; }} a:hover {{ color:{G["navy"]}; text-decoration:underline; }}
+    .desk {{ width:1440px; height:900px; box-sizing:border-box; padding:20px 24px; background:{G["desktop"]}; }}
+    .win {{ height:100%; box-sizing:border-box; background:{G["face"]}; border-top:2px solid {G["hi"]}; border-left:2px solid {G["hi"]}; border-right:2px solid {G["lo"]}; border-bottom:2px solid {G["lo"]}; box-shadow: inset 1px 1px 0 {G["midhi"]}, inset -1px -1px 0 {G["midlo"]}; padding:3px; display:flex; flex-direction:column; gap:6px; }}
+    .title {{ height:20px; background:linear-gradient(90deg, {G["navy"]}, #1084d0); color:#fff; font-weight:700; display:flex; align-items:center; padding:0 4px 0 6px; gap:6px; }}
+    .title img {{ height:14px; width:auto; }}
+    .title .sp {{ flex:1 1 auto; }}
+    .tb {{ width:16px; height:14px; background:{G["face"]}; border-top:1px solid {G["hi"]}; border-left:1px solid {G["hi"]}; border-right:1px solid {G["lo"]}; border-bottom:1px solid {G["lo"]}; box-shadow: inset 1px 1px 0 {G["midhi"]}, inset -1px -1px 0 {G["midlo"]}; color:#000; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; font-family:'Marlett', {G_FONT}; }}
+    .menu {{ display:flex; gap:14px; padding:2px 6px 0; }}
+    .menu span:first-letter {{ text-decoration:underline; }}
+    .row {{ display:flex; align-items:center; gap:8px; padding:0 4px; }}
+    .sp {{ flex:1 1 auto; }}
+    /* classic bevel button (_paint_fastgraph95) */
+    .b95 {{ display:inline-flex; align-items:center; justify-content:center; gap:6px; height:24px; padding:0 12px; background:{G["face"]}; color:{G["text"]}; cursor:default; white-space:nowrap; text-decoration:none;
+      border-top:1px solid {G["hi"]}; border-left:1px solid {G["hi"]}; border-right:1px solid {G["lo"]}; border-bottom:1px solid {G["lo"]};
+      box-shadow: inset 1px 1px 0 {G["midhi"]}, inset -1px -1px 0 {G["midlo"]}; }}
+    .b95:hover {{ background:{G["hover"]}; }}
+    .b95:active {{ border-top-color:{G["lo"]}; border-left-color:{G["lo"]}; border-right-color:{G["hi"]}; border-bottom-color:{G["hi"]}; box-shadow: inset 1px 1px 0 {G["midlo"]}, inset -1px -1px 0 {G["midhi"]}; padding:1px 11px 0 13px; }}
+    .b95.default {{ outline:1px solid #000; outline-offset:0; }}
+    .b95.focus {{ position:relative; }}
+    .b95.focus::after {{ content:""; position:absolute; inset:3px; border:1px dotted #000; }}
+    .b95.danger {{ color:{G["danger"]}; font-weight:700; }} .b95.positive {{ color:{G["positive"]}; font-weight:700; }} .b95.warning {{ color:{G["warning"]}; font-weight:700; }}
+    /* sunken field */
+    .f95 {{ display:inline-flex; align-items:center; height:22px; padding:0 4px; background:{G["white"]}; color:{G["text"]}; box-sizing:border-box;
+      border-top:2px solid {G["lo"]}; border-left:2px solid {G["lo"]}; border-right:2px solid {G["hi"]}; border-bottom:2px solid {G["hi"]}; box-shadow: inset 1px 1px 0 {G["midlo"]}; gap:6px; }}
+    .f95 .spin {{ display:flex; flex-direction:column; margin-left:auto; }}
+    .f95 .spin i {{ width:14px; height:9px; background:{G["face"]}; border-top:1px solid {G["hi"]}; border-left:1px solid {G["hi"]}; border-right:1px solid {G["lo"]}; border-bottom:1px solid {G["lo"]}; display:flex; align-items:center; justify-content:center; font-style:normal; font-size:7px; line-height:1; }}
+    .f95.big {{ font-weight:700; font-size:13px; color:{G["navy"]}; }}
+    .f95.sel {{ background:{G["navy"]}; color:#fff; }}
+    /* segmented (measureSegment) */
+    .seg {{ display:inline-flex; gap:1px; }}
+    .seg span {{ height:22px; padding:0 10px; display:inline-flex; align-items:center; gap:4px; background:{G["face"]}; color:{G["muted"]};
+      border-top:2px solid {G["hi"]}; border-left:2px solid {G["hi"]}; border-right:2px solid {G["lo"]}; border-bottom:2px solid {G["lo"]}; }}
+    .seg span.on {{ background:{G["navy"]}; color:#fff; border-top-color:{G["lo"]}; border-left-color:{G["lo"]}; border-right-color:{G["hi"]}; border-bottom-color:{G["hi"]}; }}
+    /* checkbox */
+    .cb {{ display:inline-flex; align-items:center; gap:6px; }}
+    .cb i {{ width:13px; height:13px; background:{G["white"]}; border-top:1px solid {G["lo"]}; border-left:1px solid {G["lo"]}; border-right:1px solid {G["hi"]}; border-bottom:1px solid {G["hi"]}; box-shadow: inset 1px 1px 0 {G["midlo"]}; display:flex; align-items:center; justify-content:center; font-style:normal; font-size:11px; font-weight:700; line-height:1; }}
+    .cb.on i::before {{ content:"✓"; }}
+    /* sunken panel (viewport) and group box */
+    .sunk {{ background:{G["white"]}; border-top:2px solid {G["lo"]}; border-left:2px solid {G["lo"]}; border-right:2px solid {G["hi"]}; border-bottom:2px solid {G["hi"]}; box-shadow: inset 1px 1px 0 {G["midlo"]}; }}
+    .gb {{ position:relative; border:1px solid {G["midlo"]}; box-shadow: 1px 1px 0 {G["hi"]}, inset 1px 1px 0 {G["hi"]}; padding:14px 8px 8px; margin-top:8px; }}
+    .gb .t {{ position:absolute; top:-8px; left:8px; padding:0 4px; background:{G["face"]}; }}
+    .cap {{ text-align:center; padding:2px 0 3px; }}
+    .plotwrap {{ display:grid; grid-template-columns: 22px minmax(0,1fr); grid-template-rows: minmax(0,1fr) 18px; }}
+    .ylab {{ writing-mode:vertical-rl; transform:rotate(180deg); text-align:center; }}
+    .xlab {{ grid-column:2; text-align:center; }}
+    .brow {{ display:grid; grid-template-columns: 18px 104px 96px 96px 76px auto 24px; align-items:center; gap:8px; height:30px; }}
+    .brow .n {{ text-align:right; }}
+    .brow.active .n {{ color:{G["navy"]}; font-weight:700; }}
+    .brow.empty {{ color:{G["disabled"]}; grid-template-columns: 18px 1fr; }}
+    .pre {{ margin:0; padding:4px 6px; font-family:'Fixedsys', 'Courier New', monospace; font-size:12px; line-height:1.45; white-space:pre; color:{G["text"]}; }}
+    .status {{ display:flex; gap:3px; border-top:2px solid {G["hi"]}; padding-top:3px; }}
+    .status span {{ height:20px; display:inline-flex; align-items:center; padding:0 6px; border-top:1px solid {G["midlo"]}; border-left:1px solid {G["midlo"]}; border-right:1px solid {G["hi"]}; border-bottom:1px solid {G["hi"]}; }}
+    .status .grow {{ flex:1 1 auto; }}
+"""
+
+def g_spin(val, big=False, w=None):
+    st = f' style="width:{w}px"' if w else ""
+    return f'<span class="f95{" big" if big else ""}"{st}>{val}<span class="spin"><i>▲</i><i>▼</i></span></span>'
+
+def g_band(b, active=False):
+    t = {"PK": "Peak", "LSC": "Low shelf", "HSC": "High shelf"}[b["type"]]
+    return (f'<div class="brow{" active" if active else ""}"><span class="n">{b["n"]}</span>'
+            f'<span class="f95">{t}<span class="spin" style="margin-left:auto"><i style="height:18px;width:16px;font-size:8px">▼</i></span></span>'
+            f'{g_spin(fmt_hz(b["fc"]) + " Hz")}{g_spin(f"{b["gain"]:+.1f} dB")}{g_spin(f"Q {b["q"]:.2f}")}'
+            f'<span class="cb on"><i></i>On</span><span class="b95" style="height:20px;padding:0 6px;color:{G["danger"]};font-weight:700">×</span></div>')
+
+def build_g():
+    tape = tape_svg(1330, 74, dict(G_ST, tape_base=20))
+    graph = graph_svg(1318, 318, G_ST).replace("<svg ", '<svg shape-rendering="crispEdges" ', 1)
+    exp = export_text()
+    body = f"""
+<div class="desk">
+ <div class="win">
+  <div class="title"><img src="dms-mark.png" alt=""> DMS fastgraph — EQ by ear<span class="sp"></span><span class="tb">_</span><span class="tb">□</span><span class="tb" style="margin-left:2px">×</span></div>
+  <div class="menu"><span>File</span><span>Edit</span><span>Tone</span><span>Bands</span><span>Help</span></div>
+
+  <div class="row">
+    <span class="b95">Tutorial</span><span class="b95">Floatplane</span><span class="b95">Patreon</span>
+    <span class="sp"></span>
+    <span class="cb on"><i></i>Tone</span>
+    <span class="cb on"><i></i>EQ engaged</span>
+  </div>
+
+  <div class="row">
+    <span class="b95 default warning focus">■ Stop</span>
+    <span>Level</span>{g_spin(f"{LEVEL_DB:.1f} dB", w=88)}
+    <span>Tone</span>{g_spin(fmt_hz(SWEEP_F) + " Hz", big=True, w=110)}
+    <span style="color:{G["muted"]}">← → nudge · Shift coarse · Space stop</span>
+    <span class="sp"></span>
+    <span>Mark</span>
+    <span class="seg"><span class="on">Start 1</span><span>Top 2</span><span>End 3</span></span>
+    <span class="cb"><i></i>Dip</span>
+    <span class="b95">Undo</span><span class="b95 danger">Clear</span>
+  </div>
+
+  <div class="gb"><span class="t">Sweep (drag slowly)</span>
+    <div class="sunk" style="padding:0 6px">{tape}</div>
+  </div>
+
+  <div class="gb" style="flex:1 1 auto; display:flex; flex-direction:column; min-height:0"><span class="t">Response (sum of bands, ±12 dB)</span>
+    <div class="plotwrap" style="flex:1 1 auto; min-height:0">
+      <div class="ylab">Magnitude (dB)</div>
+      <div class="sunk" style="overflow:hidden">{graph}</div>
+      <div class="xlab">Frequency (Hz)</div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns: minmax(0,1fr) 540px; gap:10px">
+    <div class="gb"><span class="t">Bands (3 of 8)</span>
+      {g_band(BANDS[0], True)}{g_band(BANDS[1])}{g_band(BANDS[2])}
+      <div class="brow empty"><span class="n">4</span><span>Mark three points to add the next band</span></div>
+    </div>
+    <div class="gb" style="display:flex; flex-direction:column; gap:6px"><span class="t">Parametric EQ</span>
+      <div class="sunk" style="flex:1 1 auto"><pre class="pre">{exp}</pre></div>
+      <div class="row" style="padding:0">
+        <span>Preamp</span>{g_spin(f"{PREAMP:.1f} dB", w=80)}
+        <span class="sp"></span>
+        <span class="b95">Session ▾</span><span class="b95">Save .txt</span><span class="b95 default">Copy</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="status"><span class="grow">Ready.</span><span>v0.1</span><span>Saved</span></div>
+ </div>
+</div>
+"""
+    write("Fastgraph95.dc.html", wrap("G · FastGraph 95", "", G_CSS, body))
+
 # =============================================================================
 def build_canvas():
     W, H, GAP = 1440, 900, 100
@@ -1108,8 +1253,9 @@ def build_canvas():
     y2 = H + 140
     R1, R2 = "round-1", "round-2"
     canvas = {
-        "pages": [{"id": "round-3", "name": "Round 3 · Fastgraph"}, {"id": R2, "name": "Round 2 · quiet"}, {"id": R1, "name": "Round 1 · dense"}],
+        "pages": [{"id": "fun-95", "name": "For fun · FastGraph 95"}, {"id": "round-3", "name": "Round 3 · Fastgraph"}, {"id": R2, "name": "Round 2 · quiet"}, {"id": R1, "name": "Round 1 · dense"}],
         "artboards": [
+            {"file": "Fastgraph95.dc.html", "title": "G · FastGraph 95", "x": xs[0], "y": 0, "w": W, "h": H, "page": "fun-95"},
             {"file": "Fastgraph.dc.html", "title": "F · Fastgraph", "x": xs[0], "y": 0, "w": W, "h": H, "page": "round-3"},
             {"file": "WarnFastgraph.dc.html", "title": "F · first-run warning", "x": xs[0], "y": y2, "w": 720, "h": 460, "page": "round-3"},
             {"file": "Main.dc.html", "title": "D · Quiet, light", "x": xs[0], "y": 0, "w": W, "h": H, "page": R2},
@@ -1137,7 +1283,7 @@ def build_canvas():
             {"id": "note-c", "x": xs[2] + 760, "y": y2, "w": 320, "page": R1,
              "text": "C · Broadcast console\n\nWhy: maximum contrast and clarity. Raised black modules, amber readouts, a big STOP. Fastest to scan while sweeping.\n\nTradeoff: the coldest of the three and closest to a generic pro-audio look; character comes from restraint and the amber-only palette."},
         ],
-        "launch": {"view": "canvas", "page": "round-3"},
+        "launch": {"view": "canvas", "page": "fun-95"},
     }
     with open(os.path.join(HERE, "canvas.json"), "w") as f:
         json.dump(canvas, f, indent=2)
@@ -1152,5 +1298,6 @@ if __name__ == "__main__":
     build_min_warn("light", "WarnQuietLight.dc.html", "D · first-run warning")
     build_min_warn("dark", "WarnQuietDark.dc.html", "E · first-run warning")
     build_f(); build_f_warn()
+    build_g()
     build_canvas()
     print("\n" + export_text())
