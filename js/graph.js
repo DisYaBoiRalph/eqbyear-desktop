@@ -105,12 +105,12 @@ export class Graph {
       const x = freqToX(f, w);
       g.appendChild(el('line', {
         x1: x.toFixed(1), y1: 0, x2: x.toFixed(1), y2: h,
-        stroke: 'var(--hair)', 'stroke-width': '1',
+        stroke: 'var(--hair)', 'stroke-width': '1', 'stroke-dasharray': '3 3',
       }));
       const [anchor, dx] = anchorFor(f);
       g.appendChild(el('text', {
         x: (x + dx).toFixed(1), y: h - 6, 'text-anchor': anchor,
-        'font-family': 'var(--sans)', 'font-size': '10.5', fill: 'var(--mute)',
+        'font-family': 'var(--sans)', 'font-size': '11.5', fill: 'var(--mute)',
       }, fmtK(f)));
     }
 
@@ -119,16 +119,18 @@ export class Graph {
     // labels just outside the box, where they clip away).
     for (const db of DB_LINES) {
       const y = this._y(db);
-      g.appendChild(el('line', {
+      const line = el('line', {
         x1: 0, y1: y.toFixed(1), x2: w, y2: y.toFixed(1),
         stroke: db === 0 ? 'var(--hair2)' : 'var(--hair)',
         'stroke-width': db === 0 ? '1.5' : '1',
-      }));
+      });
+      if (db !== 0) line.setAttribute('stroke-dasharray', '3 3');   // 0 dB stays solid
+      g.appendChild(line);
       if (db === 0) continue;
       const label = (db > 0 ? '+' : '−') + Math.abs(db) + ' dB';
       g.appendChild(el('text', {
         x: 6, y: (db > 0 ? y - 4 : y + 12).toFixed(1),
-        'font-family': 'var(--sans)', 'font-size': '10.5', fill: 'var(--mute)',
+        'font-family': 'var(--sans)', 'font-size': '11.5', fill: 'var(--mute)',
       }, label));
     }
   }
@@ -177,7 +179,7 @@ export class Graph {
       const ly = i === 1 ? MARK_Y - 20 : MARK_Y - 6;
       g.appendChild(el('text', {
         x: lx.toFixed(1), y: ly, 'text-anchor': anchor,
-        'font-family': 'var(--sans)', 'font-size': '11', fill: 'var(--ink)',
+        'font-family': 'var(--sans)', 'font-size': '11.5', fill: 'var(--ink)',
       }, `${MARK_KEYS[i]} ${fmtK(f)}`));
     }
 

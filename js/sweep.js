@@ -108,7 +108,7 @@ export class SweepStrip {
       const t = el('text', {
         x: (x + dx).toFixed(1), y: base + LABEL_DY,
         'text-anchor': anchor,
-        'font-family': 'var(--sans)', 'font-size': '11',
+        'font-family': 'var(--sans)', 'font-size': '11.5',
         fill: 'var(--mute)',
       });
       t.textContent = fmtK(f);

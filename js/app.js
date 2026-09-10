@@ -44,6 +44,8 @@ const el = {
   kindPeak: $('kindPeak'),
   kindDip: $('kindDip'),
   addBand: $('addBand'),
+  undoBtn: $('undoBtn'),
+  clearBtn: $('clearBtn'),
   bandCount: $('bandCount'),
   bandList: $('bandList'),
   peq: $('peq'),
@@ -138,33 +140,59 @@ const rows = new Map(); // id -> row element
 let rowKey = '';
 const patchTimers = new Map();
 
+const ARROWS =
+  '<span class="arrows">' +
+  '<button type="button" data-step="up" tabindex="-1" aria-hidden="true">' +
+  '<svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>' +
+  '<button type="button" data-step="down" tabindex="-1" aria-hidden="true">' +
+  '<svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>' +
+  '</span>';
+
+const CHEV =
+  '<span class="chev" aria-hidden="true">' +
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>' +
+  '</span>';
+
 function bandRow(band) {
   const row = document.createElement('div');
   row.className = 'band';
   row.dataset.id = band.id;
   row.innerHTML =
     '<span class="n"></span>' +
+    '<span class="fld">' +
     '<select class="sel" data-f="type" aria-label="Filter type">' +
     '<option value="PK">Peak</option>' +
     '<option value="LSC">Low shelf</option>' +
     '<option value="HSC">High shelf</option>' +
-    '</select>' +
-    '<span class="fld"><input class="inp w-fc" data-f="fc" type="number" step="1" min="20" max="20000" aria-label="Frequency in hertz"><i>Hz</i></span>' +
-    '<span class="fld"><input class="inp w-gain" data-f="gain" type="number" step="0.5" aria-label="Gain in decibels"><i>dB</i></span>' +
-    '<span class="fld"><i>Q</i><input class="inp w-q" data-f="q" type="number" step="0.1" aria-label="Q"></span>' +
+    '</select>' + CHEV +
+    '</span>' +
+    '<span class="fld"><input class="inp w-fc" data-f="fc" type="number" step="1" min="20" max="20000" aria-label="Frequency in hertz"><i>Hz</i>' + ARROWS + '</span>' +
+    '<span class="fld"><input class="inp w-gain" data-f="gain" type="number" step="0.5" aria-label="Gain in decibels"><i>dB</i>' + ARROWS + '</span>' +
+    '<span class="fld"><i>Q</i><input class="inp w-q" data-f="q" type="number" step="0.1" aria-label="Q">' + ARROWS + '</span>' +
     '<button type="button" class="sw" data-f="enabled" role="switch" aria-label="Enable band"></button>' +
-    '<button type="button" class="del" aria-label="Remove band">' +
-    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>' +
-    '</button>';
+    '<button type="button" class="del" aria-label="Remove band">×</button>';
   return row;
 }
 
 function emptyRow(n) {
   const row = document.createElement('div');
   row.className = 'band empty';
-  row.innerHTML = `<span class="n">${n}</span><span>Mark three points to add the next</span>`;
+  row.innerHTML = `<span class="n">${n}</span><span>Mark three points to add the next band</span>`;
   return row;
 }
+
+// The drawn chevrons replace the native spinners: step the input in the same
+// field and let the normal input/change listeners pick the value up.
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.arrows button');
+  if (!btn) return;
+  const input = btn.closest('.fld') && btn.closest('.fld').querySelector('input');
+  if (!input || input.disabled) return;
+  if (btn.dataset.step === 'up') input.stepUp();
+  else input.stepDown();
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+});
 
 function renderBands(s) {
   const key = s.bands.map((b) => b.id).join('|') + `#${s.bands.length}`;
@@ -256,9 +284,9 @@ function renderMarks(s) {
     const btn = el.marks[k];
     const set = d[k] != null;
     btn.classList.toggle('set', set);
-    btn.classList.toggle('next', k === next);
+    btn.classList.toggle('on', k === next);
     btn.innerHTML = set
-      ? `${MARK_LABEL[k]} ${dsp.fmtK(Math.round(d[k]))}`
+      ? `${MARK_LABEL[k]} <span class="tech">${dsp.fmtK(Math.round(d[k]))}</span>`
       : `${MARK_LABEL[k]}<kbd>${MARK_KEY[k]}</kbd>`;
   }
   el.kindSw.setAttribute('aria-checked', d.kind === 'dip' ? 'true' : 'false');
@@ -273,6 +301,8 @@ el.kindSw.addEventListener('click', () => {
   store.setDraftKind(store.get().draft.kind === 'dip' ? 'peak' : 'dip');
 });
 el.addBand.addEventListener('click', () => store.commitDraft());
+el.undoBtn.addEventListener('click', () => store.undo());
+el.clearBtn.addEventListener('click', () => store.clearDraft());
 
 // ------------------------------------------------------------------ chrome ---
 
@@ -399,6 +429,8 @@ function render(s) {
   el.playLabel.textContent = s.playing ? 'Stop' : 'Play';
   el.playIcon.toggleAttribute('hidden', s.playing);
   el.stopIcon.toggleAttribute('hidden', !s.playing);
+  // Playing reads amber (the "stop what is running" role); stopped reads accent.
+  el.playBtn.classList.toggle('warning', s.playing);
 
   setValue(el.level, String(s.levelDb));
   el.levelOut.textContent = fmtDb(s.levelDb);
@@ -418,13 +450,13 @@ function render(s) {
 
 store.subscribe(render);
 
-// Fresh session: the gate slider starts at −40 dB and writes it into state.
+// Fresh session: the gate slider starts at −20 dB and writes it into state.
 // A restored session keeps its own level and shows it on the gate.
 if (restored && Number.isFinite(Number(restored.levelDb))) {
   el.gateLevel.value = String(store.get().levelDb);
 } else {
-  store.setLevel(-40);
-  el.gateLevel.value = '-40';
+  store.setLevel(-20);
+  el.gateLevel.value = '-20';
 }
 el.gateLevelOut.textContent = fmtDb(Number(el.gateLevel.value));
 

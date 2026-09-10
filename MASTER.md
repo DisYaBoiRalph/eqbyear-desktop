@@ -91,7 +91,7 @@ Keyboard: click or drag the tape to sweep · ← → nudge (Shift for coarse) ·
 | # | Phase | Status |
 |---|-------|--------|
 | 0 | Records and scaffolding | Done 2026-09-09 |
-| 1 | Design directions, owner picks | Done 2026-09-09 (two rounds; "Quiet, light + dark toggle" chosen) |
+| 1 | Design directions, owner picks | Done 2026-09-09 (three rounds; Fastgraph theme chosen after the quiet theme read as generic) |
 | 2 | Core build: audio, sweep, graph, marking, bands, re-sweep | Done 2026-09-09 |
 | 3 | Export and persistence | Done 2026-09-09 |
 | 4 | Polish and QA after owner's first real use; Safari and Firefox pass | Next |
@@ -115,13 +115,14 @@ One row per shipped slice. Newest last.
 | 2026-09-09 | Top bar: wordmark is just "DMS", Tutorial button added (link TBD) | Owner review of the first build: "brilliant" otherwise. |
 | 2026-09-09 | Floatplane and Patreon buttons in the top bar; hidden affiliate gear section scaffolded | Gear section unpublished until links exist. |
 | 2026-09-09 | Round 3 design direction: F · Fastgraph (tokens + button recipe lifted from DMS Fastgraph's default dark theme) | Feedback on the live site: still reads "vibe coded". Canvas page "Round 3 · Fastgraph". Awaiting owner pick; if approved, port offline, verify, then deploy. |
+| 2026-09-09 | Fastgraph theme ported to the site and deployed | Dark default, light via toggle. Gate starts at −20 dB. Cache-busting `?v=` on CSS/JS links. Verified with headless Chrome renders + in-pane functional checks (marks, export, theme toggle). |
 | 2026-09-09 | Live on https://eqbyear.com | Cloudflare Workers static assets, Worker `eqbyear`, config `wrangler.jsonc`, upload filter `.assetsignore`. Deploy: `npx wrangler deploy` from the repo root. |
 
 ---
 
 ## 6. Session handoff (keep current)
 
-**Position**: Rev 1 is live on eqbyear.com in the quiet-light theme. Viewers said it looks generic, so a Fastgraph-themed direction (F) is on the canvas for the owner to judge. If approved: port F's CSS to `css/tokens.css` + `css/app.css` (Inter + Inconsolata, Fastgraph dark tokens, recessed glow buttons, segmented Start/Top/End, panels), test locally, then `npx wrangler deploy`.
+**Position**: Rev 1 is live on eqbyear.com in the Fastgraph theme (dark default, light toggle). Owner has not yet used it with headphones for real.
 
 **Fastgraph theme source** (read-only reference): `/Users/dms/Documents/DMS Fastgraph/dms/ui/style_tokens.py` (DARK_TOKENS, GeometryTokens, MotionTokens), `dms/theme.py` (`_stylesheet_body`), `dms/ui/modern_button.py` (glow button paint). The mock's `F_CSS` in `design/build_mocks.py` is the web port of those.
 
