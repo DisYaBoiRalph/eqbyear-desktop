@@ -38,6 +38,7 @@ export class Graph {
 
     this.grid = el('g', {});     // static, rebuilt on resize only
     this.layer = el('g', {});    // dynamic, rebuilt every render
+    svg.setAttribute('shape-rendering', 'crispEdges');
     svg.appendChild(this.grid);
     svg.appendChild(this.layer);
 
@@ -105,16 +106,16 @@ export class Graph {
       const x = freqToX(f, w);
       g.appendChild(el('line', {
         x1: x.toFixed(1), y1: 0, x2: x.toFixed(1), y2: h,
-        stroke: 'var(--hair)', 'stroke-width': '1', 'stroke-dasharray': '3 3',
+        stroke: 'var(--hair)', 'stroke-width': '1',
       }));
       const [anchor, dx] = anchorFor(f);
       g.appendChild(el('text', {
         x: (x + dx).toFixed(1), y: h - 6, 'text-anchor': anchor,
-        'font-family': 'var(--sans)', 'font-size': '11.5', fill: 'var(--mute)',
+        'font-family': 'var(--sans)', 'font-size': '11', fill: 'var(--mute)',
       }, fmtK(f)));
     }
 
-    // Horizontal dB lines; 0 dB slightly stronger. Labels sit above a positive
+    // Horizontal dB lines, solid; 0 dB slightly stronger. Labels sit above a positive
     // line and below a negative one, exactly as in the mock (which puts the ±12
     // labels just outside the box, where they clip away).
     for (const db of DB_LINES) {
@@ -124,13 +125,12 @@ export class Graph {
         stroke: db === 0 ? 'var(--hair2)' : 'var(--hair)',
         'stroke-width': db === 0 ? '1.5' : '1',
       });
-      if (db !== 0) line.setAttribute('stroke-dasharray', '3 3');   // 0 dB stays solid
       g.appendChild(line);
       if (db === 0) continue;
       const label = (db > 0 ? '+' : '−') + Math.abs(db) + ' dB';
       g.appendChild(el('text', {
         x: 6, y: (db > 0 ? y - 4 : y + 12).toFixed(1),
-        'font-family': 'var(--sans)', 'font-size': '11.5', fill: 'var(--mute)',
+        'font-family': 'var(--sans)', 'font-size': '11', fill: 'var(--mute)',
       }, label));
     }
   }
@@ -152,7 +152,7 @@ export class Graph {
       g.appendChild(el('path', {
         d: this._path((f) => magnitudeDb(b, f)),
         fill: 'none', stroke: 'var(--ghost)', 'stroke-width': '1',
-        'stroke-dasharray': '2 4',
+        'stroke-dasharray': '1 2',
       }));
     }
 
@@ -160,7 +160,7 @@ export class Graph {
     const sum = (f) => responseDb(on, f);
     g.appendChild(el('path', {
       d: this._path(sum),
-      fill: 'none', stroke: 'var(--accent)', 'stroke-width': '2.2',
+      fill: 'none', stroke: 'var(--accent)', 'stroke-width': '2',
       'stroke-linejoin': 'round',
     }));
 
@@ -179,7 +179,7 @@ export class Graph {
       const ly = i === 1 ? MARK_Y - 20 : MARK_Y - 6;
       g.appendChild(el('text', {
         x: lx.toFixed(1), y: ly, 'text-anchor': anchor,
-        'font-family': 'var(--sans)', 'font-size': '11.5', fill: 'var(--ink)',
+        'font-family': 'var(--sans)', 'font-size': '11', fill: 'var(--ink)',
       }, `${MARK_KEYS[i]} ${fmtK(f)}`));
     }
 
@@ -187,7 +187,7 @@ export class Graph {
     bands.forEach((b, i) => {
       g.appendChild(el('text', {
         x: freqToX(b.fc, w).toFixed(1), y: h - 22, 'text-anchor': 'middle',
-        'font-family': 'var(--sans)', 'font-size': '10.5',
+        'font-family': 'var(--sans)', 'font-size': '11',
         fill: b.id === st.selectedId ? 'var(--accent)' : 'var(--mute)',
       }, String(i + 1)));
     });

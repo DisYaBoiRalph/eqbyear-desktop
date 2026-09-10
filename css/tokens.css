@@ -1,94 +1,100 @@
-/* Theme tokens — ported from DMS Fastgraph (dms/ui/style_tokens.py).
-   Theme is set as data-theme on <html>; default dark. :root is the dark theme so
-   a document with no data-theme still paints correctly. */
+/* Theme tokens — FastGraph 95.
+   Ported from DMS Fastgraph (dms/ui/style_tokens.py: FASTGRAPH_95_TOKENS and
+   FASTGRAPH_95_DARK_TOKENS) with the bevel ramp from dms/theme.py and
+   dms/ui/modern_button.py. Theme is set as data-theme on <html>; default light
+   (the grey/teal 95 look). :root repeats the light theme so a document with no
+   data-theme still paints correctly. */
 
-:root {
+:root,
+:root[data-theme="light"] {
   /* surfaces */
-  --bg: #07090C;
-  --viewport: #0C1015;
-  --panel: #121820;
-  --raised: #18212B;
-  --control: #1E2833;
-  --control-hover: #293847;
-  --alternate: #10161D;
+  --desktop: #008080;
+  --face: #C0C0C0;
+  --hover: #D4D4D4;
+  --alt: #A0A0A0;
+  --field: #FFFFFF;
 
   /* type */
-  --text: #E3E7EE;
-  --muted: #91A2BA;
-  --disabled: #6E7785;
+  --text: #000000;
+  --muted: #404040;
+  --disabled: #808080;
 
-  /* lines and states */
-  --border: #334152;
-  --selected: #203B50;
-  --accent: #66CCFF;
-  --danger: #F0A0A0;
-  --positive: #9DEAB5;
-  --warning: #FFDCA1;
+  /* states */
+  --navy: #000080;
+  --accent: #000080;
+  --danger: #800000;
+  --positive: #008000;
+  --warning: #808000;
+
+  /* selection / title bar (navy fill, white text) */
+  --sel-bg: #000080;
+  --sel-fg: #FFFFFF;
+  --title-a: #000080;
+  --title-b: #1084D0;
+  --title-fg: #FFFFFF;
 
   /* plot */
-  --plot-bg: #1A1A1A;
-  --plot-fg: #AAB0B9;
-  --plot-grid: #555D68;
+  --plot-bg: #FFFFFF;
+  --plot-fg: #000000;
+  --plot-grid: #808080;
+
+  /* bevel ramp: light, mid-light, mid-dark, dark */
+  --hi: #FFFFFF;
+  --midhi: #DFDFDF;
+  --midlo: #808080;
+  --lo: #000000;
 
   /* fonts */
-  --ui: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  --tech: 'Inconsolata', Menlo, monospace;
-
-  /* button recipe: recessed well + face, from dms/ui/modern_button.py.
-     Face = viewport mixed 58% toward black. */
-  --btn-face: #050709;
-  --btn-edge: #050607;
-  --btn-well-a: rgba(1, 3, 4, 0.93);
-  --btn-well-b: rgba(0, 0, 0, 0.86);
-  --btn-ring: #151C25;
+  --font: Tahoma, 'Microsoft Sans Serif', 'MS Sans Serif', Verdana, sans-serif;
+  --mono: 'Fixedsys', 'Courier New', monospace;
 
   /* aliases used by js/graph.js and js/sweep.js */
-  --ink: var(--text);
+  --ink: var(--plot-fg);
   --mute: var(--plot-fg);
   --faint: var(--plot-fg);
   --hair: var(--plot-grid);
   --hair2: var(--plot-grid);
-  --ghost: rgba(227, 231, 238, 0.28);
-  --playhead: rgba(227, 231, 238, 0.55);
-  --sans: var(--ui);
-  --mono: var(--tech);
-
-  color-scheme: dark;
-}
-
-:root[data-theme="light"] {
-  --bg: #F3F5F8;
-  --viewport: #FFFFFF;
-  --panel: #F8FAFC;
-  --raised: #FFFFFF;
-  --control: #E8ECF1;
-  --control-hover: #DCE3EB;
-  --alternate: #E9EDF2;
-
-  --text: #20252D;
-  --muted: #5F6977;
-  --disabled: #99A1AC;
-
-  --border: #B9C1CC;
-  --selected: #CFE4F6;
-  --accent: #176EA6;
-  --danger: #8A2525;
-  --positive: #176B37;
-  --warning: #764D00;
-
-  --plot-bg: #FAFBFC;
-  --plot-fg: #4F5967;
-  --plot-grid: #AEB7C2;
-
-  /* Light face = control mixed 18% toward black (modern_button._surface_and_text). */
-  --btn-face: #BEC2C6;
-  --btn-edge: #AAAFB5;
-  --btn-well-a: rgba(83, 97, 116, 0.30);
-  --btn-well-b: rgba(83, 97, 116, 0.18);
-  --btn-ring: #DCE2EA;
-
-  --ghost: rgba(32, 37, 45, 0.28);
-  --playhead: rgba(32, 37, 45, 0.55);
+  --ghost: rgba(0, 0, 0, 0.45);
+  --playhead: var(--plot-fg);
+  --sans: var(--font);
 
   color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --desktop: #242424;
+  --face: #444444;
+  --hover: #535353;
+  --alt: #2D2D2D;
+  --field: #292929;
+
+  --text: #E2E2E2;
+  --muted: #B0B0B0;
+  --disabled: #777777;
+
+  --navy: #78AEDD;
+  --accent: #78AEDD;
+  --danger: #E09191;
+  --positive: #8CCB9A;
+  --warning: #D6BD77;
+
+  --sel-bg: #315B85;
+  --sel-fg: #FFFFFF;
+  --title-a: #315B85;
+  --title-b: #4A7FB0;
+  --title-fg: #FFFFFF;
+
+  --plot-bg: #202020;
+  --plot-fg: #E2E2E2;
+  --plot-grid: #666666;
+
+  /* dark bevel ramp (dms/theme.py _fastgraph95_stylesheet, dark variant) */
+  --hi: #8F8F8F;
+  --midhi: #666666;
+  --midlo: #1B1B1B;
+  --lo: #000000;
+
+  --ghost: rgba(226, 226, 226, 0.45);
+
+  color-scheme: dark;
 }

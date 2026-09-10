@@ -53,6 +53,7 @@ export class SweepStrip {
       x1: 0, y1: NEEDLE_TOP, x2: 0, y2: NEEDLE_TOP,
       stroke: 'var(--ink)', 'stroke-width': '1.5',
     });
+    svg.setAttribute('shape-rendering', 'crispEdges');
     svg.appendChild(this.ticks);
     svg.appendChild(this.needle);
 
@@ -102,13 +103,13 @@ export class SweepStrip {
       const x = freqToX(f, w);
       g.appendChild(el('line', {
         x1: x.toFixed(1), y1: base - MAJOR_H, x2: x.toFixed(1), y2: base,
-        stroke: 'var(--faint)', 'stroke-width': '1.5',
+        stroke: 'var(--faint)', 'stroke-width': '1',
       }));
       const [anchor, dx] = anchorFor(f);
       const t = el('text', {
         x: (x + dx).toFixed(1), y: base + LABEL_DY,
         'text-anchor': anchor,
-        'font-family': 'var(--sans)', 'font-size': '11.5',
+        'font-family': 'var(--sans)', 'font-size': '11',
         fill: 'var(--mute)',
       });
       t.textContent = fmtK(f);

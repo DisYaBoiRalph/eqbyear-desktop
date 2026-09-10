@@ -37,12 +37,8 @@ const el = {
   levelOut: $('levelOut'),
   playBtn: $('playBtn'),
   playLabel: $('playLabel'),
-  playIcon: document.querySelector('#playBtn .ico-play'),
-  stopIcon: document.querySelector('#playBtn .ico-stop'),
   marks: { start: $('mkStart'), top: $('mkTop'), end: $('mkEnd') },
   kindSw: $('kindSw'),
-  kindPeak: $('kindPeak'),
-  kindDip: $('kindDip'),
   addBand: $('addBand'),
   undoBtn: $('undoBtn'),
   clearBtn: $('clearBtn'),
@@ -68,11 +64,11 @@ const el = {
 const restored = storage.load();
 const store = createStore(restored);
 
-// One-time move to the dark default for sessions saved before the theme change.
+// One-time move to the light default for sessions saved before the theme change.
 try {
-  if (!localStorage.getItem('dms-sweep:theme-v2')) {
-    store.setTheme('dark');
-    localStorage.setItem('dms-sweep:theme-v2', '1');
+  if (!localStorage.getItem('dms-sweep:theme-v3')) {
+    store.setTheme('light');
+    localStorage.setItem('dms-sweep:theme-v3', '1');
   }
 } catch (e) {
   /* storage unavailable */
@@ -150,53 +146,52 @@ const rows = new Map(); // id -> row element
 let rowKey = '';
 const patchTimers = new Map();
 
+// The two drawn 95 spinner arrows; the native ones are hidden in CSS.
 const ARROWS =
-  '<span class="arrows">' +
-  '<button type="button" data-step="up" tabindex="-1" aria-hidden="true">' +
-  '<svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>' +
-  '<button type="button" data-step="down" tabindex="-1" aria-hidden="true">' +
-  '<svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>' +
+  '<span class="spin">' +
+  '<button type="button" data-step="up" tabindex="-1" aria-hidden="true">▲</button>' +
+  '<button type="button" data-step="down" tabindex="-1" aria-hidden="true">▼</button>' +
   '</span>';
 
-const CHEV =
-  '<span class="chev" aria-hidden="true">' +
-  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>' +
-  '</span>';
+const CHEV = '<span class="spin one" aria-hidden="true"><i>▼</i></span>';
 
 function bandRow(band) {
   const row = document.createElement('div');
-  row.className = 'band';
+  row.className = 'bcard';
   row.dataset.id = band.id;
   row.innerHTML =
     '<span class="n"></span>' +
-    '<span class="fld">' +
-    '<select class="sel" data-f="type" aria-label="Filter type">' +
+    '<span class="f95">' +
+    '<select class="sel95" data-f="type" aria-label="Filter type">' +
     '<option value="PK">Peak</option>' +
     '<option value="LSC">Low shelf</option>' +
     '<option value="HSC">High shelf</option>' +
     '</select>' + CHEV +
     '</span>' +
-    '<span class="fld"><input class="inp w-fc" data-f="fc" type="number" step="1" min="20" max="20000" aria-label="Frequency in hertz"><i>Hz</i>' + ARROWS + '</span>' +
-    '<span class="fld"><input class="inp w-gain" data-f="gain" type="number" step="0.5" aria-label="Gain in decibels"><i>dB</i>' + ARROWS + '</span>' +
-    '<span class="fld"><i>Q</i><input class="inp w-q" data-f="q" type="number" step="0.1" aria-label="Q">' + ARROWS + '</span>' +
-    '<button type="button" class="sw" data-f="enabled" role="switch" aria-label="Enable band"></button>' +
-    '<button type="button" class="del" aria-label="Remove band">×</button>';
+    '<span class="f95"><input class="inp" data-f="fc" type="number" step="1" min="20" max="20000" aria-label="Frequency in hertz"><i class="u">Hz</i>' + ARROWS + '</span>' +
+    '<div class="r2">' +
+    '<span class="f95"><input class="inp" data-f="gain" type="number" step="0.5" aria-label="Gain in decibels"><i class="u">dB</i>' + ARROWS + '</span>' +
+    '<span class="f95"><i class="u">Q</i><input class="inp" data-f="q" type="number" step="0.1" aria-label="Q">' + ARROWS + '</span>' +
+    '<button type="button" class="cb" data-f="enabled" role="switch" aria-label="Enable band"><i></i>On</button>' +
+    '<span class="sp"></span>' +
+    '<button type="button" class="b95 x del" aria-label="Remove band">×</button>' +
+    '</div>';
   return row;
 }
 
 function emptyRow(n) {
   const row = document.createElement('div');
-  row.className = 'band empty';
+  row.className = 'bcard empty';
   row.innerHTML = `<span class="n">${n}</span><span>Mark three points to add the next band</span>`;
   return row;
 }
 
-// The drawn chevrons replace the native spinners: step the input in the same
+// The drawn arrows replace the native spinners: step the input in the same
 // field and let the normal input/change listeners pick the value up.
 document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.arrows button');
+  const btn = e.target.closest('.f95 .spin button');
   if (!btn) return;
-  const input = btn.closest('.fld') && btn.closest('.fld').querySelector('input');
+  const input = btn.closest('.f95') && btn.closest('.f95').querySelector('input');
   if (!input || input.disabled) return;
   if (btn.dataset.step === 'up') input.stepUp();
   else input.stepDown();
@@ -221,7 +216,7 @@ function renderBands(s) {
   s.bands.forEach((b, i) => {
     const row = rows.get(b.id);
     if (!row) return;
-    row.classList.toggle('cur', b.id === s.selectedId);
+    row.classList.toggle('active', b.id === s.selectedId);
     row.classList.toggle('off', b.enabled === false);
     row.querySelector('.n').textContent = String(i + 1);
     setValue(row.querySelector('[data-f="type"]'), b.type);
@@ -244,12 +239,12 @@ function patchField(id, field, raw) {
 }
 
 el.bandList.addEventListener('focusin', (e) => {
-  const row = e.target.closest('.band[data-id]');
+  const row = e.target.closest('.bcard[data-id]');
   if (row) store.selectBand(row.dataset.id);
 });
 
 el.bandList.addEventListener('input', (e) => {
-  const row = e.target.closest('.band[data-id]');
+  const row = e.target.closest('.bcard[data-id]');
   const f = e.target.dataset && e.target.dataset.f;
   if (!row || !f || f === 'type' || f === 'enabled') return;
   const id = row.dataset.id;
@@ -260,7 +255,7 @@ el.bandList.addEventListener('input', (e) => {
 });
 
 el.bandList.addEventListener('change', (e) => {
-  const row = e.target.closest('.band[data-id]');
+  const row = e.target.closest('.bcard[data-id]');
   const f = e.target.dataset && e.target.dataset.f;
   if (!row || !f) return;
   const id = row.dataset.id;
@@ -270,7 +265,7 @@ el.bandList.addEventListener('change', (e) => {
 });
 
 el.bandList.addEventListener('click', (e) => {
-  const row = e.target.closest('.band[data-id]');
+  const row = e.target.closest('.bcard[data-id]');
   if (!row) return;
   const id = row.dataset.id;
   if (e.target.closest('.del')) {
@@ -300,8 +295,6 @@ function renderMarks(s) {
       : `${MARK_LABEL[k]}<kbd>${MARK_KEY[k]}</kbd>`;
   }
   el.kindSw.setAttribute('aria-checked', d.kind === 'dip' ? 'true' : 'false');
-  el.kindPeak.classList.toggle('act', d.kind !== 'dip');
-  el.kindDip.classList.toggle('act', d.kind === 'dip');
 }
 
 for (const k of ['start', 'top', 'end']) {
@@ -428,6 +421,8 @@ function pulseSaved() {
 
 function render(s) {
   el.html.dataset.theme = s.theme;
+  // The button names the theme it switches to.
+  el.themeBtn.textContent = s.theme === 'dark' ? 'Light' : 'Dark';
 
   el.readout.textContent = dsp.fmtHz(s.freq);
   sweep.update(s.freq);
@@ -437,9 +432,7 @@ function render(s) {
   el.statEq.classList.toggle('on', s.eqOn);
   el.statEq.setAttribute('aria-pressed', s.eqOn ? 'true' : 'false');
   el.playLabel.textContent = s.playing ? 'Stop' : 'Play';
-  el.playIcon.toggleAttribute('hidden', s.playing);
-  el.stopIcon.toggleAttribute('hidden', !s.playing);
-  // Playing reads amber (the "stop what is running" role); stopped reads accent.
+  // Playing reads olive (the "stop what is running" role); stopped reads plain.
   el.playBtn.classList.toggle('warning', s.playing);
 
   setValue(el.level, String(s.levelDb));

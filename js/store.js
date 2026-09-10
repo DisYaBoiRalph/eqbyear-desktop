@@ -50,7 +50,7 @@ export function defaultState() {
     bands: [],
     selectedId: null,
     draft: emptyDraft('peak'),
-    theme: 'dark',
+    theme: 'light',
   };
 }
 
@@ -104,7 +104,7 @@ export function validate(raw) {
     bands,
     selectedId,
     draft,
-    theme: s.theme === 'light' ? 'light' : 'dark',
+    theme: s.theme === 'dark' ? 'dark' : 'light',
   });
 }
 
@@ -199,7 +199,7 @@ export function createStore(initial) {
     },
 
     setTheme(t) {
-      const v = t === 'light' ? 'light' : 'dark';
+      const v = t === 'dark' ? 'dark' : 'light';
       if (v === state.theme) return state;
       return set({ ...state, theme: v });
     },

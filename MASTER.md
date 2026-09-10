@@ -117,13 +117,14 @@ One row per shipped slice. Newest last.
 | 2026-09-09 | Floatplane and Patreon buttons in the top bar; hidden affiliate gear section scaffolded | Gear section unpublished until links exist. |
 | 2026-09-09 | Round 3 design direction: F · Fastgraph (tokens + button recipe lifted from DMS Fastgraph's default dark theme) | Feedback on the live site: still reads "vibe coded". Canvas page "Round 3 · Fastgraph". Awaiting owner pick; if approved, port offline, verify, then deploy. |
 | 2026-09-09 | Fastgraph theme ported to the site and deployed | Dark default, light via toggle. Gate starts at −20 dB. Cache-busting `?v=` on CSS/JS links (bump the query when CSS/JS change). One-time localStorage flag `dms-sweep:theme-v2` moves pre-existing sessions to dark. Verified with headless Chrome renders + in-pane functional checks (marks, export, theme toggle). |
+| 2026-09-09 | FastGraph 95 theme ported and deployed | Default = FastGraph 95 (teal/silver), toggle = FastGraph 95 Dark. Win95 range slider for level, bands column right, no webfonts (Tahoma stack). One-time flag `dms-sweep:theme-v3` resets saved sessions to the light 95 theme. |
 | 2026-09-09 | Live on https://eqbyear.com | Cloudflare Workers static assets, Worker `eqbyear`, config `wrangler.jsonc`, upload filter `.assetsignore`. Deploy: `npx wrangler deploy` from the repo root. |
 
 ---
 
 ## 6. Session handoff (keep current)
 
-**Position**: Rev 1 is live on eqbyear.com in the Fastgraph theme (dark default, light toggle). Owner has not yet used it with headphones for real.
+**Position**: Rev 1 is live on eqbyear.com in the FastGraph 95 theme (light default, 95-dark toggle). Owner has not yet used it with headphones for real. The blue Fastgraph theme (v2) survives only in git history and the canvas.
 
 **Fastgraph theme source** (read-only reference): `/Users/dms/Documents/DMS Fastgraph/dms/ui/style_tokens.py` (DARK_TOKENS, GeometryTokens, MotionTokens), `dms/theme.py` (`_stylesheet_body`), `dms/ui/modern_button.py` (glow button paint). The mock's `F_CSS` in `design/build_mocks.py` is the web port of those.
 
