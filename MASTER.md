@@ -113,13 +113,16 @@ One row per shipped slice. Newest last.
 | 2026-09-09 | Integration and acceptance in the in-app Chromium | All items in SPEC.md acceptance passed. Fixes: compressor replaced by a hard clipper (its makeup gain skewed levels 1.6 dB), clipboard fallback, band numbers lifted off the axis labels. |
 | 2026-09-09 | Top bar: wordmark is just "DMS", Tutorial button added (link TBD) | Owner review of the first build: "brilliant" otherwise. |
 | 2026-09-09 | Floatplane and Patreon buttons in the top bar; hidden affiliate gear section scaffolded | Gear section unpublished until links exist. |
+| 2026-09-09 | Round 3 design direction: F · Fastgraph (tokens + button recipe lifted from DMS Fastgraph's default dark theme) | Feedback on the live site: still reads "vibe coded". Canvas page "Round 3 · Fastgraph". Awaiting owner pick; if approved, port offline, verify, then deploy. |
 | 2026-09-09 | Live on https://eqbyear.com | Cloudflare Workers static assets, Worker `eqbyear`, config `wrangler.jsonc`, upload filter `.assetsignore`. Deploy: `npx wrangler deploy` from the repo root. |
 
 ---
 
 ## 6. Session handoff (keep current)
 
-**Position**: Rev 1 tool works locally. Owner has not yet used it with headphones.
+**Position**: Rev 1 is live on eqbyear.com in the quiet-light theme. Viewers said it looks generic, so a Fastgraph-themed direction (F) is on the canvas for the owner to judge. If approved: port F's CSS to `css/tokens.css` + `css/app.css` (Inter + Inconsolata, Fastgraph dark tokens, recessed glow buttons, segmented Start/Top/End, panels), test locally, then `npx wrangler deploy`.
+
+**Fastgraph theme source** (read-only reference): `/Users/dms/Documents/DMS Fastgraph/dms/ui/style_tokens.py` (DARK_TOKENS, GeometryTokens, MotionTokens), `dms/theme.py` (`_stylesheet_body`), `dms/ui/modern_button.py` (glow button paint). The mock's `F_CSS` in `design/build_mocks.py` is the web port of those.
 
 **Next actions**
 

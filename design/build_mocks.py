@@ -119,19 +119,21 @@ def graph_svg(w, h, st):
         for db in range(-12, 13, 2):
             y = h / 2 - db / 12 * (h / 2)
             out.append(f'<line x1="0" y1="{y:.1f}" x2="{w}" y2="{y:.1f}" stroke="{st["grid_fine"]}" stroke-width="1"/>')
+    gd = f' stroke-dasharray="{st["grid_dash"]}"' if st.get("grid_dash") else ""
+    lfs = st.get("label_fs", 10.5)
     for f in MAJOR:
         x = xlog(f, w)
-        out.append(f'<line x1="{x:.1f}" y1="0" x2="{x:.1f}" y2="{h}" stroke="{st["grid"]}" stroke-width="1"/>')
+        out.append(f'<line x1="{x:.1f}" y1="0" x2="{x:.1f}" y2="{h}" stroke="{st["grid"]}" stroke-width="1"{gd}/>')
         anchor = "start" if f == 20 else ("end" if f == 20000 else "middle")
         dx = 4 if f == 20 else (-4 if f == 20000 else 0)
-        out.append(f'<text x="{x+dx:.1f}" y="{h-6}" text-anchor="{anchor}" font-family="{st["mono"]}" font-size="10.5" fill="{st["label"]}">{flabel(f)}</text>')
+        out.append(f'<text x="{x+dx:.1f}" y="{h-6}" text-anchor="{anchor}" font-family="{st["mono"]}" font-size="{lfs}" fill="{st["label"]}">{flabel(f)}</text>')
     for db in (-12, -6, 0, 6, 12):
         y = h / 2 - db / 12 * (h / 2)
         sw = 1.5 if db == 0 else 1
         col = st["zero"] if db == 0 else st["grid"]
-        out.append(f'<line x1="0" y1="{y:.1f}" x2="{w}" y2="{y:.1f}" stroke="{col}" stroke-width="{sw}"/>')
+        out.append(f'<line x1="0" y1="{y:.1f}" x2="{w}" y2="{y:.1f}" stroke="{col}" stroke-width="{sw}"{gd if db != 0 else ""}/>')
         if db != 0:
-            out.append(f'<text x="6" y="{y-4 if db>0 else y+12:.1f}" font-family="{st["mono"]}" font-size="10.5" fill="{st["label"]}">{db:+d} dB</text>')
+            out.append(f'<text x="6" y="{y-4 if db>0 else y+12:.1f}" font-family="{st["mono"]}" font-size="{lfs}" fill="{st["label"]}">{db:+d} dB</text>')
     # per-band ghosts
     for b in BANDS:
         out.append(f'<path d="{path(w, h, lambda f, b=b: band_db(b, f))}" fill="none" stroke="{st["ghost"]}" stroke-width="1" stroke-dasharray="{st.get("ghost_dash","3 4")}"/>')
@@ -885,6 +887,220 @@ def build_min_warn(theme, fname, title):
 """
     write(fname, wrap(title, M_FONTS, m_css(t), body))
 
+
+# =============================================================================
+# ROUND 3 — F · Fastgraph (matches DMS Fastgraph's default dark theme)
+# Tokens from DMS Fastgraph dms/ui/style_tokens.py DARK_TOKENS; button recipe from
+# dms/ui/modern_button.py (recessed well + radial accent glow rising on hover).
+# =============================================================================
+F_FONTS = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inconsolata:wght@400;500;600&display=swap"
+FG = dict(background="#07090C", viewport="#0C1015", panel="#121820", raised="#18212B", control="#1E2833",
+          control_hover="#293847", alternate="#10161D", text="#E3E7EE", muted="#91A2BA", disabled="#6E7785",
+          border="#334152", selected="#203B50", accent="#66CCFF", danger="#F0A0A0", positive="#9DEAB5",
+          warning="#FFDCA1", plot_bg="#1A1A1A", plot_fg="#AAB0B9", plot_grid="#555D68")
+F_UI = "'Inter', 'Helvetica Neue', Arial, sans-serif"
+F_TECH = "'Inconsolata', Menlo, monospace"
+
+F_ST = dict(bg=FG["plot_bg"], tick=FG["plot_grid"], tick_major=FG["plot_fg"], label=FG["plot_fg"], mono=F_UI, label_fs=11.5,
+            needle=FG["text"], needle_w=1.5,
+            grid=FG["plot_grid"], grid_dash="3 3", zero=FG["plot_grid"],
+            ghost="rgba(227,231,238,0.28)", ghost_dash="2 4", fill="none", curve="var(--accent)", curve_w=2,
+            mark=FG["text"], mark_style="dot", mark_y=30, mark_fs=11.5, mark_names=("start", "top", "end"),
+            playhead=FG["text"], playhead_w=1, playhead_op=0.55)
+
+F_CSS = f"""
+    body {{ margin:0; background:{FG["background"]}; color:{FG["text"]}; font-family:{F_UI}; font-size:13px; -webkit-font-smoothing:antialiased; }}
+    a {{ color:{FG["accent"]}; }} a:hover {{ color:#9ad3f6; }}
+    .page {{ --accent:{FG["accent"]}; width:1440px; height:900px; box-sizing:border-box; padding:14px 16px; display:flex; flex-direction:column; gap:10px; background:{FG["background"]}; }}
+
+    /* ---- surfaces (QWidget[surfaceLevel]) ---- */
+    .viewport {{ background:{FG["viewport"]}; border:1px solid {FG["border"]}; border-radius:12px; }}
+    .panel {{ background:{FG["panel"]}; border:1px solid {FG["border"]}; border-radius:12px; }}
+    .raised {{ background:{FG["raised"]}; border:1px solid {FG["border"]}; border-radius:12px; }}
+    .cap {{ font-size:11px; color:{FG["muted"]}; }}
+    .section {{ font-size:15px; font-weight:600; }}
+    .screen {{ font-size:20px; font-weight:700; }}
+    .tech {{ font-family:{F_TECH}; }}
+
+    /* ---- ModernButton: surround → well → face with radial accent glow ---- */
+    .fgb {{ position:relative; display:inline-flex; align-items:center; justify-content:center; gap:8px; height:32px; padding:0 18px; box-sizing:border-box;
+      border-radius:12px; cursor:pointer; font-weight:600; font-size:13px; white-space:nowrap; text-decoration:none;
+      color: color-mix(in srgb, {FG["text"]} 70%, var(--accent));
+      background:
+        radial-gradient(ellipse 50% 50% at 50% 105%, color-mix(in srgb, var(--accent) 30%, transparent) 0%, color-mix(in srgb, var(--accent) 13%, transparent) 48%, transparent 92%),
+        #050709;
+      border:1px solid color-mix(in srgb, #050607 87%, var(--accent));
+      box-shadow: 0 0 0 2px rgba(1,3,4,0.93), 0 0 0 3px rgba(0,0,0,0.86), 0 0 0 5px #151c25;
+      margin:5px; transition: color 160ms ease-out, border-color 160ms ease-out; }}
+    .fgb::after {{ content:""; position:absolute; inset:0; border-radius:inherit; opacity:0; transition:opacity 160ms ease-out; pointer-events:none;
+      background: radial-gradient(ellipse 98% 98% at 50% 78%, color-mix(in srgb, var(--accent) 42%, transparent) 0%, color-mix(in srgb, var(--accent) 27%, transparent) 48%, color-mix(in srgb, var(--accent) 4%, transparent) 88%, transparent 100%); }}
+    .fgb:hover {{ color: color-mix(in srgb, {FG["text"]} 54%, var(--accent)); border-color: color-mix(in srgb, #050607 65%, var(--accent)); }}
+    .fgb:hover::after {{ opacity:1; }}
+    .fgb > * {{ position:relative; z-index:1; }}
+    .fgb.primary {{ height:36px; box-shadow: 0 0 0 2px rgba(1,3,4,0.93), 0 0 0 3px rgba(0,0,0,0.86), 0 0 0 5px #151c25, 0 0 0 6.5px var(--accent); }}
+    .fgb.compact {{ height:26px; padding:0 12px; border-radius:13px; font-size:12px; }}
+    .fgb.danger {{ --accent:{FG["danger"]}; }}
+    .fgb.positive {{ --accent:{FG["positive"]}; }}
+    .fgb.warning {{ --accent:{FG["warning"]}; }}
+    .fgb.ghost {{ color:{FG["muted"]}; }}
+    .fgb.on {{ color: color-mix(in srgb, {FG["text"]} 54%, var(--accent)); }}
+    .fgb.on::after {{ opacity:1; }}
+
+    /* ---- segmented control (QPushButton[measureSegment]) ---- */
+    .seg {{ display:inline-flex; }}
+    .seg span {{ height:26px; padding:0 14px; display:inline-flex; align-items:center; gap:6px; background:{FG["control"]}; color:{FG["muted"]}; border:1px solid {FG["border"]}; border-right:0; font-weight:500; font-size:12.5px; cursor:pointer; }}
+    .seg span:first-child {{ border-radius:12px 0 0 12px; }}
+    .seg span:last-child {{ border-radius:0 12px 12px 0; border-right:1px solid {FG["border"]}; }}
+    .seg span.on {{ background:var(--accent); color:{FG["background"]}; border-color:var(--accent); font-weight:600; }}
+    .seg span kbd {{ font-family:{F_TECH}; font-size:11px; opacity:0.8; }}
+
+    /* ---- toggles, fields ---- */
+    .tg {{ display:inline-flex; align-items:center; gap:10px; font-size:13px; color:{FG["text"]}; }}
+    .tg i {{ width:44px; height:22px; border-radius:11px; background:{FG["viewport"]}; border:1px solid {FG["border"]}; position:relative; display:inline-block; }}
+    .tg i::after {{ content:""; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%; background:{FG["muted"]}; }}
+    .tg.on i {{ border-color:var(--accent); }}
+    .tg.on i::after {{ left:auto; right:3px; background:var(--accent); }}
+    .fld {{ display:inline-flex; align-items:center; height:30px; padding:0 8px 0 10px; box-sizing:border-box; background:{FG["raised"]}; border:1px solid {FG["border"]}; border-radius:8px; color:{FG["text"]}; font-size:13px; gap:10px; }}
+    .fld .arrows {{ display:flex; flex-direction:column; gap:2px; color:var(--accent); }}
+    .fld.big {{ height:36px; font-size:15px; font-weight:700; color:var(--accent); }}
+    .lab {{ font-size:13px; color:{FG["text"]}; }}
+    .lab.m {{ color:{FG["muted"]}; }}
+    .lab.a {{ color:var(--accent); font-weight:600; }}
+
+    /* ---- rows ---- */
+    .bar {{ display:flex; align-items:center; gap:14px; height:44px; }}
+    .brand {{ display:flex; align-items:center; gap:10px; margin-right:6px; }}
+    .mark {{ width:34px; height:34px; border-radius:50%; background:#000; border:1px solid {FG["border"]}; display:flex; align-items:center; justify-content:center; }}
+    .mark img {{ height:19px; width:auto; display:block; }}
+    .sp {{ flex:1 1 auto; }}
+    .ctl {{ display:flex; align-items:center; gap:14px; height:46px; }}
+    .vp-title {{ text-align:center; font-size:12.5px; color:{FG["muted"]}; padding:8px 0 6px; }}
+    .plotwrap {{ display:grid; grid-template-columns: 26px minmax(0,1fr); grid-template-rows: minmax(0,1fr) 22px; padding:0 12px 6px 6px; }}
+    .ylab {{ writing-mode:vertical-rl; transform:rotate(180deg); text-align:center; font-size:12.5px; color:{FG["plot_fg"]}; }}
+    .xlab {{ grid-column:2; text-align:center; font-size:12.5px; color:{FG["plot_fg"]}; padding-top:4px; }}
+    .plot {{ border:1px solid {FG["plot_grid"]}; overflow:hidden; background:{FG["plot_bg"]}; }}
+    .bottom {{ display:grid; grid-template-columns: minmax(0,1fr) 520px; gap:10px; flex:1 1 auto; min-height:0; }}
+    .gb {{ position:relative; padding:20px 14px 12px; }}
+    .gb-title {{ position:absolute; top:-9px; left:12px; padding:0 5px; background:{FG["panel"]}; font-size:15px; font-weight:600; color:{FG["muted"]}; }}
+    .brow {{ display:grid; grid-template-columns: 24px 122px 118px 112px 96px 56px 24px; align-items:center; gap:10px; height:40px; }}
+    .brow .n {{ font-family:{F_TECH}; font-size:13px; color:{FG["muted"]}; }}
+    .brow.active .n {{ color:var(--accent); font-weight:600; }}
+    .brow .fld {{ height:28px; font-family:{F_TECH}; font-size:13px; white-space:nowrap; }}
+    .brow .del {{ color:{FG["danger"]}; font-weight:700; text-align:center; }}
+    .brow.empty {{ color:{FG["disabled"]}; font-size:12.5px; grid-template-columns: 24px 1fr; }}
+    .pre {{ margin:0; padding:10px 12px; font-family:{F_TECH}; font-size:12.5px; line-height:1.55; color:{FG["text"]}; white-space:pre; overflow:hidden; flex:1 1 auto; }}
+    .pre b {{ color:var(--accent); font-weight:600; }}
+    .status {{ display:flex; align-items:center; gap:14px; height:34px; border-top:1px solid {FG["border"]}; padding-top:6px; font-size:13px; }}
+    .ver {{ color:{FG["muted"]}; }}
+"""
+
+def f_arrows():
+    return ('<span class="arrows"><svg width="10" height="6" viewBox="0 0 10 6"><path d="M1 5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>'
+            '<svg width="10" height="6" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>')
+
+def f_band(b, active=False):
+    t = {"PK": "Peak", "LSC": "Low shelf", "HSC": "High shelf"}[b["type"]]
+    return (f'<div class="brow{" active" if active else ""}"><span class="n">{b["n"]}</span>'
+            f'<span class="fld">{t}<span class="sp"></span>{icon("chev", FG["accent"], 12)}</span>'
+            f'<span class="fld">{fmt_hz(b["fc"])} Hz<span class="sp"></span>{f_arrows()}</span>'
+            f'<span class="fld">{b["gain"]:+.1f} dB<span class="sp"></span>{f_arrows()}</span>'
+            f'<span class="fld">Q {b["q"]:.2f}<span class="sp"></span>{f_arrows()}</span>'
+            f'<span class="tg on"><i></i></span><span class="del">×</span></div>')
+
+def build_f():
+    tape = tape_svg(1370, 84, dict(F_ST, tape_base=22))
+    graph = graph_svg(1362, 300, F_ST)
+    exp = export_text().replace("Preamp", "<b>Preamp</b>")
+    body = f"""
+<div class="page" style="--accent: {{{{accent}}}}">
+  <div class="bar">
+    <div class="brand"><span class="mark"><img src="dms-mark.png" alt="DMS"></span><span class="screen">DMS</span></div>
+    <span class="fgb compact">Tutorial</span>
+    <span class="fgb compact">Floatplane</span>
+    <span class="fgb compact">Patreon</span>
+    <span class="sp"></span>
+    <span class="tg on"><i></i>Tone</span>
+    <span class="tg on"><i></i>EQ engaged</span>
+    <span class="fgb compact ghost">{icon("moon", FG["muted"], 13)}</span>
+  </div>
+
+  <div class="ctl">
+    <span class="fgb primary warning">{icon("stop", FG["warning"], 15)} Stop</span>
+    <span class="lab m">Level</span><span class="fld">{LEVEL_DB:.1f} dB{f_arrows()}</span>
+    <span class="lab m" style="margin-left:6px">Tone</span><span class="fld big">{fmt_hz(SWEEP_F)} Hz</span>
+    <span class="lab m tech" style="font-size:12px">← → nudge · shift coarse · space stop</span>
+    <span class="sp"></span>
+    <span class="lab m">Mark</span>
+    <span class="seg"><span class="on">Start <kbd>1</kbd></span><span>Top <kbd>2</kbd></span><span>End <kbd>3</kbd></span></span>
+    <span class="tg"><i></i>Dip</span>
+    <span class="fgb">Undo</span>
+    <span class="fgb danger">Clear</span>
+  </div>
+
+  <div class="viewport" style="height:126px; display:flex; flex-direction:column;">
+    <div class="vp-title">Sweep (drag slowly)</div>
+    <div style="padding:0 18px 0 18px;">{tape}</div>
+  </div>
+
+  <div class="viewport" style="height:352px; display:flex; flex-direction:column;">
+    <div class="vp-title">Response (sum of bands, ±12 dB)</div>
+    <div class="plotwrap" style="flex:1 1 auto; min-height:0;">
+      <div class="ylab">Magnitude (dB)</div>
+      <div class="plot">{graph}</div>
+      <div class="xlab">Frequency (Hz)</div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="panel gb">
+      <div class="gb-title">Bands · 3 of 8</div>
+      {f_band(BANDS[0], True)}{f_band(BANDS[1])}{f_band(BANDS[2])}
+      <div class="brow empty"><span class="n">4</span><span>Mark three points to add the next band</span></div>
+    </div>
+    <div class="panel gb" style="display:flex; flex-direction:column; gap:8px;">
+      <div class="gb-title">Parametric EQ</div>
+      <div class="raised" style="display:flex; flex:1 1 auto; min-height:0;"><pre class="pre">{exp}</pre></div>
+      <div style="display:flex; align-items:center; gap:2px;">
+        <span class="lab m">Preamp</span><span class="fld" style="margin:0 8px">{PREAMP:.1f} dB{f_arrows()}</span>
+        <span class="sp"></span>
+        <span class="fgb">Session {icon("chev", FG["text"], 12)}</span>
+        <span class="fgb">{icon("download", FG["text"], 14)} .txt</span>
+        <span class="fgb primary">{icon("copy", FG["accent"], 14)} Copy</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="status"><span>Ready.</span><span class="sp"></span><span class="ver">v0.1</span><span class="fgb compact danger">Report Bugs / Feedback</span></div>
+</div>
+"""
+    html = wrap("F · Fastgraph", F_FONTS, F_CSS, body)
+    html = html.replace("</x-dc>", """</x-dc>
+<script data-dc-script data-props='{"accent":{"editor":"color","default":"#66CCFF","options":["#66CCFF","#FCBE11","#9DEAB5"]}}'>
+class Component extends DCLogic {
+  renderVals() { return { accent: this.props.accent ?? '#66CCFF' }; }
+}
+</script>""")
+    write("Fastgraph.dc.html", html)
+
+def build_f_warn():
+    body = f"""
+<div style="--accent:{FG["accent"]}; width:720px; height:460px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; background:{FG["background"]}; font-family:{F_UI}; color:{FG["text"]};">
+  <div class="panel" style="width:520px; padding:22px 24px 20px; display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span class="mark" style="width:44px; height:44px;"><img src="dms-mark.png" alt="DMS" style="height:24px;"></span>
+      <div class="screen">Turn your volume down first.</div>
+    </div>
+    <div style="font-size:13.5px; line-height:1.55; color:{FG["muted"]};">Sine tones at high level can damage hearing and equipment. Start quiet, then raise the level to where you normally listen to music.</div>
+    <div style="display:flex; align-items:center; gap:12px; padding-top:12px; border-top:1px solid {FG["border"]};">
+      <span class="lab m">Level</span><span class="fld">−40.0 dB{f_arrows()}</span>
+      <span class="sp"></span>
+      <span class="fgb primary">{icon("power", FG["accent"], 14)} I understand, start</span>
+    </div>
+  </div>
+</div>
+"""
+    write("WarnFastgraph.dc.html", wrap("F · first-run warning", F_FONTS, F_CSS, body))
+
 # =============================================================================
 def build_canvas():
     W, H, GAP = 1440, 900, 100
@@ -892,8 +1108,10 @@ def build_canvas():
     y2 = H + 140
     R1, R2 = "round-1", "round-2"
     canvas = {
-        "pages": [{"id": R2, "name": "Round 2 · quiet"}, {"id": R1, "name": "Round 1 · dense"}],
+        "pages": [{"id": "round-3", "name": "Round 3 · Fastgraph"}, {"id": R2, "name": "Round 2 · quiet"}, {"id": R1, "name": "Round 1 · dense"}],
         "artboards": [
+            {"file": "Fastgraph.dc.html", "title": "F · Fastgraph", "x": xs[0], "y": 0, "w": W, "h": H, "page": "round-3"},
+            {"file": "WarnFastgraph.dc.html", "title": "F · first-run warning", "x": xs[0], "y": y2, "w": 720, "h": 460, "page": "round-3"},
             {"file": "Main.dc.html", "title": "D · Quiet, light", "x": xs[0], "y": 0, "w": W, "h": H, "page": R2},
             {"file": "QuietDark.dc.html", "title": "E · Quiet, dark", "x": xs[1], "y": 0, "w": W, "h": H, "page": R2},
             {"file": "WarnQuietLight.dc.html", "title": "D · first-run warning", "x": xs[0], "y": y2, "w": 720, "h": 460, "page": R2},
@@ -906,6 +1124,8 @@ def build_canvas():
             {"file": "WarnConsole.dc.html", "title": "C · first-run warning", "x": xs[2], "y": y2, "w": 720, "h": 460, "page": R1},
         ],
         "annotations": [
+            {"id": "note-f", "x": xs[0] + 760, "y": y2, "w": 340, "page": "round-3",
+             "text": "F · Fastgraph\n\nSame tokens as DMS Fastgraph's default dark theme: window #07090C, panels #121820 with 12 px radius, borders #334152, Inter + Inconsolata, accent #66CCFF. Buttons are the Fastgraph recessed-well button with the radial glow that rises on hover. Segmented Start/Top/End control, pill toggles, spin fields, plot with dashed grid and axis titles, status bar.\n\nTweak: the accent chip swaps blue for DMS yellow.\n\nTradeoff: densest of all rounds; reads as an app window rather than a page."},
             {"id": "note-d", "x": xs[0] + 760, "y": y2, "w": 320, "page": R2,
              "text": "D · Quiet, light\n\nOne grotesk, one mono, hairlines, no boxes. Warm off-white so it reads as paper, not a web app. Yellow only where it means something: the curve, the current band, Copy.\n\nTradeoff: a light page next to a dark music player or DAW can feel bright during a long session."},
             {"id": "note-e", "x": xs[1] + 760, "y": y2, "w": 320, "page": R2,
@@ -917,7 +1137,7 @@ def build_canvas():
             {"id": "note-c", "x": xs[2] + 760, "y": y2, "w": 320, "page": R1,
              "text": "C · Broadcast console\n\nWhy: maximum contrast and clarity. Raised black modules, amber readouts, a big STOP. Fastest to scan while sweeping.\n\nTradeoff: the coldest of the three and closest to a generic pro-audio look; character comes from restraint and the amber-only palette."},
         ],
-        "launch": {"view": "canvas", "page": R2},
+        "launch": {"view": "canvas", "page": "round-3"},
     }
     with open(os.path.join(HERE, "canvas.json"), "w") as f:
         json.dump(canvas, f, indent=2)
@@ -931,5 +1151,6 @@ if __name__ == "__main__":
     build_min("dark", "QuietDark.dc.html", "E · Quiet, dark", "E")
     build_min_warn("light", "WarnQuietLight.dc.html", "D · first-run warning")
     build_min_warn("dark", "WarnQuietDark.dc.html", "E · first-run warning")
+    build_f(); build_f_warn()
     build_canvas()
     print("\n" + export_text())

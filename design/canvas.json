@@ -1,6 +1,10 @@
 {
   "pages": [
     {
+      "id": "round-3",
+      "name": "Round 3 \u00b7 Fastgraph"
+    },
+    {
       "id": "round-2",
       "name": "Round 2 \u00b7 quiet"
     },
@@ -10,6 +14,24 @@
     }
   ],
   "artboards": [
+    {
+      "file": "Fastgraph.dc.html",
+      "title": "F \u00b7 Fastgraph",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "round-3"
+    },
+    {
+      "file": "WarnFastgraph.dc.html",
+      "title": "F \u00b7 first-run warning",
+      "x": 0,
+      "y": 1040,
+      "w": 720,
+      "h": 460,
+      "page": "round-3"
+    },
     {
       "file": "Main.dc.html",
       "title": "D \u00b7 Quiet, light",
@@ -103,6 +125,14 @@
   ],
   "annotations": [
     {
+      "id": "note-f",
+      "x": 760,
+      "y": 1040,
+      "w": 340,
+      "page": "round-3",
+      "text": "F \u00b7 Fastgraph\n\nSame tokens as DMS Fastgraph's default dark theme: window #07090C, panels #121820 with 12 px radius, borders #334152, Inter + Inconsolata, accent #66CCFF. Buttons are the Fastgraph recessed-well button with the radial glow that rises on hover. Segmented Start/Top/End control, pill toggles, spin fields, plot with dashed grid and axis titles, status bar.\n\nTweak: the accent chip swaps blue for DMS yellow.\n\nTradeoff: densest of all rounds; reads as an app window rather than a page."
+    },
+    {
       "id": "note-d",
       "x": 760,
       "y": 1040,
@@ -145,6 +175,6 @@
   ],
   "launch": {
     "view": "canvas",
-    "page": "round-2"
+    "page": "round-3"
   }
 }

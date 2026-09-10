@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>F · first-run warning</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inconsolata:wght@400;500;600&display=swap">
+  <style>
+
+    body { margin:0; background:#07090C; color:#E3E7EE; font-family:'Inter', 'Helvetica Neue', Arial, sans-serif; font-size:13px; -webkit-font-smoothing:antialiased; }
+    a { color:#66CCFF; } a:hover { color:#9ad3f6; }
+    .page { --accent:#66CCFF; width:1440px; height:900px; box-sizing:border-box; padding:14px 16px; display:flex; flex-direction:column; gap:10px; background:#07090C; }
+
+    /* ---- surfaces (QWidget[surfaceLevel]) ---- */
+    .viewport { background:#0C1015; border:1px solid #334152; border-radius:12px; }
+    .panel { background:#121820; border:1px solid #334152; border-radius:12px; }
+    .raised { background:#18212B; border:1px solid #334152; border-radius:12px; }
+    .cap { font-size:11px; color:#91A2BA; }
+    .section { font-size:15px; font-weight:600; }
+    .screen { font-size:20px; font-weight:700; }
+    .tech { font-family:'Inconsolata', Menlo, monospace; }
+
+    /* ---- ModernButton: surround → well → face with radial accent glow ---- */
+    .fgb { position:relative; display:inline-flex; align-items:center; justify-content:center; gap:8px; height:32px; padding:0 18px; box-sizing:border-box;
+      border-radius:12px; cursor:pointer; font-weight:600; font-size:13px; white-space:nowrap; text-decoration:none;
+      color: color-mix(in srgb, #E3E7EE 70%, var(--accent));
+      background:
+        radial-gradient(ellipse 50% 50% at 50% 105%, color-mix(in srgb, var(--accent) 30%, transparent) 0%, color-mix(in srgb, var(--accent) 13%, transparent) 48%, transparent 92%),
+        #050709;
+      border:1px solid color-mix(in srgb, #050607 87%, var(--accent));
+      box-shadow: 0 0 0 2px rgba(1,3,4,0.93), 0 0 0 3px rgba(0,0,0,0.86), 0 0 0 5px #151c25;
+      margin:5px; transition: color 160ms ease-out, border-color 160ms ease-out; }
+    .fgb::after { content:""; position:absolute; inset:0; border-radius:inherit; opacity:0; transition:opacity 160ms ease-out; pointer-events:none;
+      background: radial-gradient(ellipse 98% 98% at 50% 78%, color-mix(in srgb, var(--accent) 42%, transparent) 0%, color-mix(in srgb, var(--accent) 27%, transparent) 48%, color-mix(in srgb, var(--accent) 4%, transparent) 88%, transparent 100%); }
+    .fgb:hover { color: color-mix(in srgb, #E3E7EE 54%, var(--accent)); border-color: color-mix(in srgb, #050607 65%, var(--accent)); }
+    .fgb:hover::after { opacity:1; }
+    .fgb > * { position:relative; z-index:1; }
+    .fgb.primary { height:36px; box-shadow: 0 0 0 2px rgba(1,3,4,0.93), 0 0 0 3px rgba(0,0,0,0.86), 0 0 0 5px #151c25, 0 0 0 6.5px var(--accent); }
+    .fgb.compact { height:26px; padding:0 12px; border-radius:13px; font-size:12px; }
+    .fgb.danger { --accent:#F0A0A0; }
+    .fgb.positive { --accent:#9DEAB5; }
+    .fgb.warning { --accent:#FFDCA1; }
+    .fgb.ghost { color:#91A2BA; }
+    .fgb.on { color: color-mix(in srgb, #E3E7EE 54%, var(--accent)); }
+    .fgb.on::after { opacity:1; }
+
+    /* ---- segmented control (QPushButton[measureSegment]) ---- */
+    .seg { display:inline-flex; }
+    .seg span { height:26px; padding:0 14px; display:inline-flex; align-items:center; gap:6px; background:#1E2833; color:#91A2BA; border:1px solid #334152; border-right:0; font-weight:500; font-size:12.5px; cursor:pointer; }
+    .seg span:first-child { border-radius:12px 0 0 12px; }
+    .seg span:last-child { border-radius:0 12px 12px 0; border-right:1px solid #334152; }
+    .seg span.on { background:var(--accent); color:#07090C; border-color:var(--accent); font-weight:600; }
+    .seg span kbd { font-family:'Inconsolata', Menlo, monospace; font-size:11px; opacity:0.8; }
+
+    /* ---- toggles, fields ---- */
+    .tg { display:inline-flex; align-items:center; gap:10px; font-size:13px; color:#E3E7EE; }
+    .tg i { width:44px; height:22px; border-radius:11px; background:#0C1015; border:1px solid #334152; position:relative; display:inline-block; }
+    .tg i::after { content:""; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%; background:#91A2BA; }
+    .tg.on i { border-color:var(--accent); }
+    .tg.on i::after { left:auto; right:3px; background:var(--accent); }
+    .fld { display:inline-flex; align-items:center; height:30px; padding:0 8px 0 10px; box-sizing:border-box; background:#18212B; border:1px solid #334152; border-radius:8px; color:#E3E7EE; font-size:13px; gap:10px; }
+    .fld .arrows { display:flex; flex-direction:column; gap:2px; color:var(--accent); }
+    .fld.big { height:36px; font-size:15px; font-weight:700; color:var(--accent); }
+    .lab { font-size:13px; color:#E3E7EE; }
+    .lab.m { color:#91A2BA; }
+    .lab.a { color:var(--accent); font-weight:600; }
+
+    /* ---- rows ---- */
+    .bar { display:flex; align-items:center; gap:14px; height:44px; }
+    .brand { display:flex; align-items:center; gap:10px; margin-right:6px; }
+    .mark { width:34px; height:34px; border-radius:50%; background:#000; border:1px solid #334152; display:flex; align-items:center; justify-content:center; }
+    .mark img { height:19px; width:auto; display:block; }
+    .sp { flex:1 1 auto; }
+    .ctl { display:flex; align-items:center; gap:14px; height:46px; }
+    .vp-title { text-align:center; font-size:12.5px; color:#91A2BA; padding:8px 0 6px; }
+    .plotwrap { display:grid; grid-template-columns: 26px minmax(0,1fr); grid-template-rows: minmax(0,1fr) 22px; padding:0 12px 6px 6px; }
+    .ylab { writing-mode:vertical-rl; transform:rotate(180deg); text-align:center; font-size:12.5px; color:#AAB0B9; }
+    .xlab { grid-column:2; text-align:center; font-size:12.5px; color:#AAB0B9; padding-top:4px; }
+    .plot { border:1px solid #555D68; overflow:hidden; background:#1A1A1A; }
+    .bottom { display:grid; grid-template-columns: minmax(0,1fr) 520px; gap:10px; flex:1 1 auto; min-height:0; }
+    .gb { position:relative; padding:20px 14px 12px; }
+    .gb-title { position:absolute; top:-9px; left:12px; padding:0 5px; background:#121820; font-size:15px; font-weight:600; color:#91A2BA; }
+    .brow { display:grid; grid-template-columns: 24px 122px 118px 112px 96px 56px 24px; align-items:center; gap:10px; height:40px; }
+    .brow .n { font-family:'Inconsolata', Menlo, monospace; font-size:13px; color:#91A2BA; }
+    .brow.active .n { color:var(--accent); font-weight:600; }
+    .brow .fld { height:28px; font-family:'Inconsolata', Menlo, monospace; font-size:13px; white-space:nowrap; }
+    .brow .del { color:#F0A0A0; font-weight:700; text-align:center; }
+    .brow.empty { color:#6E7785; font-size:12.5px; grid-template-columns: 24px 1fr; }
+    .pre { margin:0; padding:10px 12px; font-family:'Inconsolata', Menlo, monospace; font-size:12.5px; line-height:1.55; color:#E3E7EE; white-space:pre; overflow:hidden; flex:1 1 auto; }
+    .pre b { color:var(--accent); font-weight:600; }
+    .status { display:flex; align-items:center; gap:14px; height:34px; border-top:1px solid #334152; padding-top:6px; font-size:13px; }
+    .ver { color:#91A2BA; }
+
+  </style>
+</helmet>
+
+<div style="--accent:#66CCFF; width:720px; height:460px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; background:#07090C; font-family:'Inter', 'Helvetica Neue', Arial, sans-serif; color:#E3E7EE;">
+  <div class="panel" style="width:520px; padding:22px 24px 20px; display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span class="mark" style="width:44px; height:44px;"><img src="dms-mark.png" alt="DMS" style="height:24px;"></span>
+      <div class="screen">Turn your volume down first.</div>
+    </div>
+    <div style="font-size:13.5px; line-height:1.55; color:#91A2BA;">Sine tones at high level can damage hearing and equipment. Start quiet, then raise the level to where you normally listen to music.</div>
+    <div style="display:flex; align-items:center; gap:12px; padding-top:12px; border-top:1px solid #334152;">
+      <span class="lab m">Level</span><span class="fld">−40.0 dB<span class="arrows"><svg width="10" height="6" viewBox="0 0 10 6"><path d="M1 5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><svg width="10" height="6" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+      <span class="sp"></span>
+      <span class="fgb primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#66CCFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/></svg> I understand, start</span>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>
