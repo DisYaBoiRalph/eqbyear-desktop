@@ -155,3 +155,15 @@ block); Claude memory entry `dms-sweep-project` points here.
 - Phone layout.
 - Share link that encodes the session.
 - Presets export for specific apps (Wavelet, Poweramp, Qudelix) if the generic text isn't enough.
+
+---
+
+## 8. Monetization notes (2026-09-09)
+
+Free access stays. AdSense is a poor fit (low yield on a tool page, clashes with the design).
+Preferred, in order: affiliate links in a short "what to run this EQ on" section (Amazon,
+Linsoul, HiFiGo, Drop, Headphones.com programs); a quiet footer support link (Ko-fi / BMAC /
+GitHub Sponsors / Patreon); the site as a funnel for the YouTube channel via the Tutorial
+button; one direct "supported by" sponsor once traffic exists. Optional pay-what-you-want
+extras (cloud profiles, share links, music preview) only if the owner is comfortable. Merch
+is on brand but low revenue.
