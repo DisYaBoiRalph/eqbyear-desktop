@@ -1168,6 +1168,28 @@ G_CSS = f"""
     .brow.active .n {{ color:{G["navy"]}; font-weight:700; }}
     .brow.empty {{ color:{G["disabled"]}; grid-template-columns: 18px 1fr; }}
     .pre {{ margin:0; padding:4px 6px; font-family:'Fixedsys', 'Courier New', monospace; font-size:12px; line-height:1.45; white-space:pre; color:{G["text"]}; }}
+    /* Windows 95 style horizontal slider (QSlider, classic) */
+    .sl95 {{ display:inline-flex; flex-direction:column; width:180px; }}
+    .sl95 .track {{ position:relative; height:21px; }}
+    .sl95 .groove {{ position:absolute; left:0; right:0; top:8px; height:4px; background:{G["face"]}; border-top:1px solid {G["lo"]}; border-left:1px solid {G["lo"]}; border-right:1px solid {G["hi"]}; border-bottom:1px solid {G["hi"]}; box-shadow: inset 1px 1px 0 {G["midlo"]}; box-sizing:border-box; }}
+    .sl95 .thumb {{ position:absolute; top:0; width:11px; height:21px; margin-left:-5px; background:{G["face"]};
+      clip-path: polygon(0 0, 100% 0, 100% 68%, 50% 100%, 0 68%);
+      background:
+        linear-gradient(135deg, {G["hi"]} 0 1px, transparent 1px) top left / 100% 100% no-repeat,
+        linear-gradient({G["face"]}, {G["face"]});
+      box-shadow: inset 1px 1px 0 {G["hi"]}, inset -1px 0 0 {G["lo"]}, inset -2px 0 0 {G["midlo"]}; }}
+    .sl95 .thumb::after {{ content:""; position:absolute; left:0; right:0; bottom:0; height:7px; background:linear-gradient(to bottom right, transparent 45%, {G["lo"]} 46%); }}
+    .sl95 .ticks {{ height:6px; background: repeating-linear-gradient(90deg, {G["lo"]} 0 1px, transparent 1px 100%); background-size: calc(100% / 9) 100%; background-position: 5px 0; margin: 0 5px; }}
+    .sl95 .lab {{ display:flex; justify-content:space-between; color:{G["muted"]}; font-size:11px; margin-top:1px; }}
+    .main {{ display:grid; grid-template-columns: minmax(0,1fr) 296px; gap:10px; flex:1 1 auto; min-height:0; }}
+    .col {{ display:flex; flex-direction:column; gap:8px; min-height:0; }}
+    .bcard {{ display:grid; grid-template-columns: 16px 1fr 1fr; gap:4px 6px; align-items:center; padding:5px 6px; border-top:1px solid {G["hi"]}; border-left:1px solid {G["hi"]}; border-right:1px solid {G["lo"]}; border-bottom:1px solid {G["lo"]}; box-shadow: inset 1px 1px 0 {G["midhi"]}, inset -1px -1px 0 {G["midlo"]}; margin-bottom:5px; }}
+    .bcard.active {{ background:{G["hover"]}; }}
+    .bcard .n {{ grid-row: span 2; text-align:center; font-weight:700; }}
+    .bcard.active .n {{ color:{G["navy"]}; }}
+    .bcard .f95 {{ width:100%; box-sizing:border-box; }}
+    .bcard .r2 {{ grid-column: 2 / 4; display:flex; align-items:center; gap:6px; }}
+    .bcard.empty {{ color:{G["disabled"]}; grid-template-columns: 16px 1fr; }}
     .status {{ display:flex; gap:3px; border-top:2px solid {G["hi"]}; padding-top:3px; }}
     .status span {{ height:20px; display:inline-flex; align-items:center; padding:0 6px; border-top:1px solid {G["midlo"]}; border-left:1px solid {G["midlo"]}; border-right:1px solid {G["hi"]}; border-bottom:1px solid {G["hi"]}; }}
     .status .grow {{ flex:1 1 auto; }}
@@ -1179,14 +1201,20 @@ def g_spin(val, big=False, w=None):
 
 def g_band(b, active=False):
     t = {"PK": "Peak", "LSC": "Low shelf", "HSC": "High shelf"}[b["type"]]
-    return (f'<div class="brow{" active" if active else ""}"><span class="n">{b["n"]}</span>'
-            f'<span class="f95">{t}<span class="spin" style="margin-left:auto"><i style="height:18px;width:16px;font-size:8px">▼</i></span></span>'
-            f'{g_spin(fmt_hz(b["fc"]) + " Hz")}{g_spin(f"{b["gain"]:+.1f} dB")}{g_spin(f"Q {b["q"]:.2f}")}'
-            f'<span class="cb on"><i></i>On</span><span class="b95" style="height:20px;padding:0 6px;color:{G["danger"]};font-weight:700">×</span></div>')
+    return (f'<div class="bcard{" active" if active else ""}"><span class="n">{b["n"]}</span>'
+            f'<span class="f95">{t}<span class="spin" style="margin-left:auto"><i style="height:16px;width:14px;font-size:8px">▼</i></span></span>'
+            f'{g_spin(fmt_hz(b["fc"]) + " Hz")}'
+            f'<div class="r2">{g_spin(f"{b["gain"]:+.1f} dB", w=78)}{g_spin(f"Q {b["q"]:.2f}", w=72)}<span class="cb on"><i></i>On</span><span class="sp"></span>'
+            f'<span class="b95" style="height:18px;padding:0 5px;color:{G["danger"]};font-weight:700">×</span></div></div>')
+
+def g_slider(db, lo=-60, hi=-6, w=180):
+    pct = (db - lo) / (hi - lo) * 100
+    return (f'<span class="sl95" style="width:{w}px"><span class="track"><span class="groove"></span><span class="thumb" style="left:{pct:.1f}%"></span></span>'
+            f'<span class="ticks"></span><span class="lab"><span>{lo}</span><span>Volume</span><span>{hi} dB</span></span></span>')
 
 def build_g():
-    tape = tape_svg(1330, 74, dict(G_ST, tape_base=20))
-    graph = graph_svg(1318, 318, G_ST).replace("<svg ", '<svg shape-rendering="crispEdges" ', 1)
+    tape = tape_svg(1024, 74, dict(G_ST, tape_base=20))
+    graph = graph_svg(1012, 318, G_ST).replace("<svg ", '<svg shape-rendering="crispEdges" ', 1)
     exp = export_text()
     body = f"""
 <div class="desk">
@@ -1203,7 +1231,8 @@ def build_g():
 
   <div class="row">
     <span class="b95 default warning focus">■ Stop</span>
-    <span>Level</span>{g_spin(f"{LEVEL_DB:.1f} dB", w=88)}
+    {g_slider(LEVEL_DB)}
+    <span class="f95" style="width:64px">{LEVEL_DB:.0f} dB</span>
     <span>Tone</span>{g_spin(fmt_hz(SWEEP_F) + " Hz", big=True, w=110)}
     <span style="color:{G["muted"]}">← → nudge · Shift coarse · Space stop</span>
     <span class="sp"></span>
@@ -1213,29 +1242,31 @@ def build_g():
     <span class="b95">Undo</span><span class="b95 danger">Clear</span>
   </div>
 
-  <div class="gb"><span class="t">Sweep (drag slowly)</span>
-    <div class="sunk" style="padding:0 6px">{tape}</div>
-  </div>
-
-  <div class="gb" style="flex:1 1 auto; display:flex; flex-direction:column; min-height:0"><span class="t">Response (sum of bands, ±12 dB)</span>
-    <div class="plotwrap" style="flex:1 1 auto; min-height:0">
-      <div class="ylab">Magnitude (dB)</div>
-      <div class="sunk" style="overflow:hidden">{graph}</div>
-      <div class="xlab">Frequency (Hz)</div>
+  <div class="main">
+    <div class="col">
+      <div class="gb"><span class="t">Sweep (drag slowly)</span>
+        <div class="sunk" style="padding:0 6px">{tape}</div>
+      </div>
+      <div class="gb" style="flex:1 1 auto; display:flex; flex-direction:column; min-height:0"><span class="t">Response (sum of bands, ±12 dB)</span>
+        <div class="plotwrap" style="flex:1 1 auto; min-height:0">
+          <div class="ylab">Magnitude (dB)</div>
+          <div class="sunk" style="overflow:hidden">{graph}</div>
+          <div class="xlab">Frequency (Hz)</div>
+        </div>
+      </div>
+      <div class="gb" style="display:flex; flex-direction:column; gap:6px"><span class="t">Parametric EQ</span>
+        <div class="sunk"><pre class="pre">{exp}</pre></div>
+        <div class="row" style="padding:0">
+          <span>Preamp</span>{g_spin(f"{PREAMP:.1f} dB", w=80)}
+          <span class="sp"></span>
+          <span class="b95">Session ▾</span><span class="b95">Save .txt</span><span class="b95 default">Copy</span>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div style="display:grid; grid-template-columns: minmax(0,1fr) 540px; gap:10px">
-    <div class="gb"><span class="t">Bands (3 of 8)</span>
-      {g_band(BANDS[0], True)}{g_band(BANDS[1])}{g_band(BANDS[2])}
-      <div class="brow empty"><span class="n">4</span><span>Mark three points to add the next band</span></div>
-    </div>
-    <div class="gb" style="display:flex; flex-direction:column; gap:6px"><span class="t">Parametric EQ</span>
-      <div class="sunk" style="flex:1 1 auto"><pre class="pre">{exp}</pre></div>
-      <div class="row" style="padding:0">
-        <span>Preamp</span>{g_spin(f"{PREAMP:.1f} dB", w=80)}
-        <span class="sp"></span>
-        <span class="b95">Session ▾</span><span class="b95">Save .txt</span><span class="b95 default">Copy</span>
+    <div class="col">
+      <div class="gb" style="flex:1 1 auto; display:flex; flex-direction:column"><span class="t">Bands (3 of 8)</span>
+        {g_band(BANDS[0], True)}{g_band(BANDS[1])}{g_band(BANDS[2])}
+        <div class="bcard empty"><span class="n" style="grid-row:auto">4</span><span>Mark three points to add the next band</span></div>
       </div>
     </div>
   </div>

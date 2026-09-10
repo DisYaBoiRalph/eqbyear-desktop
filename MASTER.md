@@ -46,6 +46,7 @@ ear, and turns the result into a parametric EQ they can paste into any PEQ app.
 | 2026-09-09 | Design: "Quiet" direction. Light by default with a dark toggle. System Arial stack, monospace only for the export text. Logo inside a black circle. Accent #FCBE11 only where it means something. |
 | 2026-09-09 | Stack: vanilla HTML/CSS/JS ES modules, no build step, no dependencies. Localhost for testing. |
 | 2026-09-09 | Domain: owner registered **eqbyear.com**. Site name on the page is just "DMS". |
+| 2026-09-09 | Design v3 (2026-09-09, later): owner loves the FastGraph 95 mock (G) and asked to implement it: Win95-style volume slider instead of a dB box, bands stacked in a right-hand column. FastGraph 95 becomes the default theme; FastGraph 95 Dark behind the toggle. Supersedes v2. |
 | 2026-09-09 | Design v2: Fastgraph theme approved (direction F). Fastgraph dark tokens, Inter + Inconsolata, accent #66CCFF, recessed glow buttons, segmented marks, panels, status bar. Dark by default, Fastgraph light tokens as the toggle. Gate level starts at −20 dB. Bands rows roomier than the mock. Supersedes the quiet-light decision. |
 
 ---
