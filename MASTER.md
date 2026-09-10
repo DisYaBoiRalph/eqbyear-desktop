@@ -136,8 +136,10 @@ One row per shipped slice. Newest last.
 - Shelf Q: Web Audio ignores Q on shelf filters while the graph draws RBJ shelves with Q.
   Shelf curves can differ slightly from what is heard. Acceptable for rev 1; noted in code.
 
-**Machine facts**: macOS (Darwin 25.6), python3 3.14, node v26.5 via Homebrew.
+**Machine facts**: macOS (Darwin 25.6), python3 3.14, node v26.5 via Homebrew, Claude Code CLI 2.1.251.
 Git user DMS, no remote yet. Local preview config in `.claude/launch.json`.
+Cloudflare plugin (skills + MCP servers) installed in Claude Code at user scope on 2026-09-09 from
+https://developers.cloudflare.com/agent-setup/prompt.md; Cloudflare OAuth login happens on first tool use.
 
 **Other records**: approved plan file `~/.claude/plans/zazzy-juggling-kurzweil.md` (STATUS
 block); Claude memory entry `dms-sweep-project` points here.
