@@ -68,6 +68,16 @@ const el = {
 const restored = storage.load();
 const store = createStore(restored);
 
+// One-time move to the dark default for sessions saved before the theme change.
+try {
+  if (!localStorage.getItem('dms-sweep:theme-v2')) {
+    store.setTheme('dark');
+    localStorage.setItem('dms-sweep:theme-v2', '1');
+  }
+} catch (e) {
+  /* storage unavailable */
+}
+
 const engine = new AudioEngine();
 let started = false;
 
