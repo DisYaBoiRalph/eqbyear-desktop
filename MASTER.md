@@ -138,9 +138,9 @@ One row per shipped slice. Newest last.
 
 **Open questions**
 
-- Tutorial button (top bar, next to the wordmark) links to `#` until the owner supplies the
-  YouTube URL. Set it on `#tutorialLink` in `index.html`. Floatplane and Patreon buttons sit
-  beside it (https://www.floatplane.com/channel/DMS3, https://www.patreon.com/DMS3TV).
+- Tutorial button links to https://youtu.be/WIWHINQ5lV8 (set 2026-09-10). Floatplane and
+  Patreon buttons sit beside it (https://www.floatplane.com/channel/DMS3,
+  https://www.patreon.com/DMS3TV).
 - Affiliate "Run this EQ on" section exists in `index.html` as `#gear` with the `hidden`
   attribute; it stays unpublished until the owner has affiliate links (Qudelix etc.; the
   owner's favourite PEQ device is not on Amazon). Remove `hidden` and fill `.gear-list`.
