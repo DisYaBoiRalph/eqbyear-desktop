@@ -109,10 +109,11 @@ One row per shipped slice. Newest last.
 |------|-------|-------|
 | 2026-09-09 | Project folder, git, records, launch config | Logo moved to `assets/`. |
 | 2026-09-09 | Round 1 design directions (A bench instrument, B lab notebook, C broadcast console) | Owner: too dense. |
-| 2026-09-09 | Round 2 directions (D quiet light, E quiet dark) | Owner chose D with a dark toggle, Arial, circle logo. Canvas: https://claude.ai/code/artifact/275c965b-2451-48cc-ba31-910cb3e2dc39 |
+| 2026-09-09 | Round 2 directions (D quiet light, E quiet dark) | Owner chose D with a dark toggle, Arial, circle logo. |
 | 2026-09-09 | `docs/SPEC.md` and `js/dsp.js` | Spec is the contract; dsp ported 1:1 from the mock's Python. |
 | 2026-09-09 | Modules built in parallel: audio + tests, graph + sweep, page + store + export + app | Delegated per module, reviewed and integrated in the main session. |
 | 2026-09-09 | Integration and acceptance in the in-app Chromium | All items in SPEC.md acceptance passed. Fixes: compressor replaced by a hard clipper (its makeup gain skewed levels 1.6 dB), clipboard fallback, band numbers lifted off the axis labels. |
+| 2026-09-10 | Open-sourced: GitHub repo DMS3tv/eqbyear, Apache-2.0 | Branch renamed to main. |
 | 2026-09-09 | Top bar: wordmark is just "DMS", Tutorial button added (link TBD) | Owner review of the first build: "brilliant" otherwise. |
 | 2026-09-09 | Floatplane and Patreon buttons in the top bar; hidden affiliate gear section scaffolded | Gear section unpublished until links exist. |
 | 2026-09-09 | Round 3 design direction: F · Fastgraph (tokens + button recipe lifted from DMS Fastgraph's default dark theme) | Feedback on the live site: still reads "vibe coded". Canvas page "Round 3 · Fastgraph". Awaiting owner pick; if approved, port offline, verify, then deploy. |
@@ -145,22 +146,15 @@ One row per shipped slice. Newest last.
   attribute; it stays unpublished until the owner has affiliate links (Qudelix etc.; the
   owner's favourite PEQ device is not on Amazon). Remove `hidden` and fill `.gear-list`.
 
-- Commit attribution: the Claude Code harness appends a `Co-Authored-By` trailer to
-  commits, which conflicts with the owner's global no-attribution rule. All commits so far
-  carry it. Nothing is pushed, so trailers can be rewritten before any remote exists.
-  Owner to decide.
 - Gain adjustment by ear: rev 1 adjusts gain by typing or arrow keys in the band row.
   Dragging on the graph is a likely Phase 4 addition if the owner wants it.
 - Shelf Q: Web Audio ignores Q on shelf filters while the graph draws RBJ shelves with Q.
   Shelf curves can differ slightly from what is heard. Acceptable for rev 1; noted in code.
 
-**Machine facts**: macOS (Darwin 25.6), python3 3.14, node v26.5 via Homebrew, Claude Code CLI 2.1.251.
-Git user DMS, no remote yet. Local preview config in `.claude/launch.json`.
-Cloudflare plugin (skills + MCP servers) installed in Claude Code at user scope on 2026-09-09 from
-https://developers.cloudflare.com/agent-setup/prompt.md; Cloudflare OAuth login happens on first tool use.
+**Machine facts**: macOS, python3 3.14, node v26.5 via Homebrew. Wrangler logged in.
+Repo: https://github.com/DMS3tv/eqbyear (public, Apache-2.0).
 
-**Other records**: approved plan file `~/.claude/plans/zazzy-juggling-kurzweil.md` (STATUS
-block); Claude memory entry `dms-sweep-project` points here.
+**Local-only notes** (not in the repo): `HANDOFF.local.md`.
 
 ---
 
@@ -175,13 +169,3 @@ block); Claude memory entry `dms-sweep-project` points here.
 - Presets export for specific apps (Wavelet, Poweramp, Qudelix) if the generic text isn't enough.
 
 ---
-
-## 8. Monetization notes (2026-09-09)
-
-Free access stays. AdSense is a poor fit (low yield on a tool page, clashes with the design).
-Preferred, in order: affiliate links in a short "what to run this EQ on" section (Amazon,
-Linsoul, HiFiGo, Drop, Headphones.com programs); a quiet footer support link (Ko-fi / BMAC /
-GitHub Sponsors / Patreon); the site as a funnel for the YouTube channel via the Tutorial
-button; one direct "supported by" sponsor once traffic exists. Optional pay-what-you-want
-extras (cloud profiles, share links, music preview) only if the owner is comfortable. Merch
-is on brand but low revenue.
