@@ -21,7 +21,7 @@ then open http://localhost:8080. Any static file server works.
 - `js/dsp.js` — filter math (RBJ biquads), log axis, three-point mark to band.
 - `tests/dsp.test.mjs` — `node tests/dsp.test.mjs`
 - `design/` — mock generator and artboards the theme was ported from.
-- `docs/SPEC.md` — build contract. `MASTER.md` — plan and history.
+- `docs/SPEC.md` — build contract.
 
 ## Deploy
 

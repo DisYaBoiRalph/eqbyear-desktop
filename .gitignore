@@ -5,3 +5,4 @@ HANDOFF.local.md
 *.log
 design/dms-sweep.html
 .wrangler/
+MASTER.md
