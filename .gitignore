@@ -6,3 +6,5 @@ HANDOFF.local.md
 design/dms-sweep.html
 .wrangler/
 MASTER.md
+src-tauri/target/
+src-tauri/gen/
