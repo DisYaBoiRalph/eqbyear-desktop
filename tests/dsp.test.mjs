@@ -4,7 +4,7 @@
 
 import {
   freqToX, xToFreq, magnitudeDb, bandFromMarks, autoPreamp, fmtHz, fmtK,
-} from '../js/dsp.js';
+} from '../src/js/dsp.js';
 
 let failures = 0;
 let checks = 0;
