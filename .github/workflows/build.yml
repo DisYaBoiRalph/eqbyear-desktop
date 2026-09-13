@@ -1,0 +1,95 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: Release type
+        type: choice
+        options:
+          - pre-release
+          - release
+        default: pre-release
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Windows portable exe
+    runs-on: windows-2025
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+      artifact: ${{ steps.version.outputs.artifact }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - name: Read version from Cargo.toml
+        id: version
+        shell: pwsh
+        run: |
+          $meta = cargo metadata --no-deps --format-version 1 --manifest-path src-tauri/Cargo.toml | ConvertFrom-Json
+          $version = $meta.packages[0].version
+          "value=$version" >> $env:GITHUB_OUTPUT
+          "artifact=eqbyear-desktop-$version-windows-x64-portable.exe" >> $env:GITHUB_OUTPUT
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2" --locked
+
+      - name: Build exe
+        working-directory: src-tauri
+        run: cargo tauri build --no-bundle
+
+      - name: Name the exe
+        shell: pwsh
+        env:
+          ARTIFACT: ${{ steps.version.outputs.artifact }}
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Copy-Item src-tauri/target/release/eqbyear-desktop.exe "dist/$env:ARTIFACT"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          path: dist/${{ steps.version.outputs.artifact }}
+          archive: false
+          if-no-files-found: error
+
+  release:
+    name: GitHub release
+    needs: windows
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: v${{ needs.windows.outputs.version }}
+      ARTIFACT: ${{ needs.windows.outputs.artifact }}
+      RELEASE_TYPE: ${{ inputs.release }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.windows.outputs.artifact }}
+          path: dist
+
+      - name: Create release
+        run: |
+          if gh api "repos/$GH_REPO/git/ref/tags/$TAG" --silent 2>/dev/null; then
+            echo "::error::Tag $TAG already exists. Bump the version in src-tauri/Cargo.toml."
+            exit 1
+          fi
+          flags=()
+          if [ "$RELEASE_TYPE" = "pre-release" ]; then
+            flags+=(--prerelease)
+          fi
+          gh release create "$TAG" "dist/$ARTIFACT" \
+            --target "$GITHUB_SHA" \
+            --title "EQ by ear Desktop $TAG" \
+            --generate-notes \
+            "${flags[@]}"
