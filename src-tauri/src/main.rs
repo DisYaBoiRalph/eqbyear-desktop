@@ -2,6 +2,9 @@
 
 mod apo;
 mod commands;
+mod window_fit;
+
+use tauri::Manager;
 
 fn main() {
     tauri::Builder::default()
@@ -14,6 +17,12 @@ fn main() {
             commands::write_eqbyear_preset,
             commands::check_apo_status,
         ])
+        .setup(|app| {
+            if let Some(window) = app.get_webview_window("main") {
+                window_fit::fit_to_screen(&window);
+            }
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
