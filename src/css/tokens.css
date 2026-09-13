@@ -1,4 +1,4 @@
-/* Theme tokens — FastGraph 95.
+/* Theme tokens - FastGraph 95.
    Ported from DMS Fastgraph (dms/ui/style_tokens.py: FASTGRAPH_95_TOKENS and
    FASTGRAPH_95_DARK_TOKENS) with the bevel ramp from dms/theme.py and
    dms/ui/modern_button.py. Theme is set as data-theme on <html>; default light
@@ -7,94 +7,94 @@
 
 :root,
 :root[data-theme="light"] {
-  /* surfaces */
-  --desktop: #008080;
-  --face: #C0C0C0;
-  --hover: #D4D4D4;
-  --alt: #A0A0A0;
-  --field: #FFFFFF;
+    /* surfaces */
+    --desktop: #008080;
+    --face: #c0c0c0;
+    --hover: #d4d4d4;
+    --alt: #a0a0a0;
+    --field: #ffffff;
 
-  /* type */
-  --text: #000000;
-  --muted: #404040;
-  --disabled: #808080;
+    /* type */
+    --text: #000000;
+    --muted: #404040;
+    --disabled: #808080;
 
-  /* states */
-  --navy: #000080;
-  --accent: #000080;
-  --danger: #800000;
-  --positive: #008000;
-  --warning: #808000;
+    /* states */
+    --navy: #000080;
+    --accent: #000080;
+    --danger: #800000;
+    --positive: #008000;
+    --warning: #808000;
 
-  /* selection / title bar (navy fill, white text) */
-  --sel-bg: #000080;
-  --sel-fg: #FFFFFF;
-  --title-a: #000080;
-  --title-b: #1084D0;
-  --title-fg: #FFFFFF;
+    /* selection / title bar (navy fill, white text) */
+    --sel-bg: #000080;
+    --sel-fg: #ffffff;
+    --title-a: #000080;
+    --title-b: #1084d0;
+    --title-fg: #ffffff;
 
-  /* plot */
-  --plot-bg: #FFFFFF;
-  --plot-fg: #000000;
-  --plot-grid: #808080;
+    /* plot */
+    --plot-bg: #ffffff;
+    --plot-fg: #000000;
+    --plot-grid: #808080;
 
-  /* bevel ramp: light, mid-light, mid-dark, dark */
-  --hi: #FFFFFF;
-  --midhi: #DFDFDF;
-  --midlo: #808080;
-  --lo: #000000;
+    /* bevel ramp: light, mid-light, mid-dark, dark */
+    --hi: #ffffff;
+    --midhi: #dfdfdf;
+    --midlo: #808080;
+    --lo: #000000;
 
-  /* fonts */
-  --font: Tahoma, 'Microsoft Sans Serif', 'MS Sans Serif', Verdana, sans-serif;
-  --mono: 'Fixedsys', 'Courier New', monospace;
+    /* fonts */
+    --font: Tahoma, "Microsoft Sans Serif", "MS Sans Serif", Verdana, sans-serif;
+    --mono: "Fixedsys", "Courier New", monospace;
 
-  /* aliases used by js/graph.js and js/sweep.js */
-  --ink: var(--plot-fg);
-  --mute: var(--plot-fg);
-  --faint: var(--plot-fg);
-  --hair: var(--plot-grid);
-  --hair2: var(--plot-grid);
-  --ghost: rgba(0, 0, 0, 0.45);
-  --playhead: var(--plot-fg);
-  --sans: var(--font);
+    /* aliases used by js/graph.js and js/sweep.js */
+    --ink: var(--plot-fg);
+    --mute: var(--plot-fg);
+    --faint: var(--plot-fg);
+    --hair: var(--plot-grid);
+    --hair2: var(--plot-grid);
+    --ghost: rgba(0, 0, 0, 0.45);
+    --playhead: var(--plot-fg);
+    --sans: var(--font);
 
-  color-scheme: light;
+    color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --desktop: #242424;
-  --face: #444444;
-  --hover: #535353;
-  --alt: #2D2D2D;
-  --field: #292929;
+    --desktop: #242424;
+    --face: #444444;
+    --hover: #535353;
+    --alt: #2d2d2d;
+    --field: #292929;
 
-  --text: #E2E2E2;
-  --muted: #B0B0B0;
-  --disabled: #777777;
+    --text: #e2e2e2;
+    --muted: #b0b0b0;
+    --disabled: #777777;
 
-  --navy: #78AEDD;
-  --accent: #78AEDD;
-  --danger: #E09191;
-  --positive: #8CCB9A;
-  --warning: #D6BD77;
+    --navy: #78aedd;
+    --accent: #78aedd;
+    --danger: #e09191;
+    --positive: #8ccb9a;
+    --warning: #d6bd77;
 
-  --sel-bg: #315B85;
-  --sel-fg: #FFFFFF;
-  --title-a: #315B85;
-  --title-b: #4A7FB0;
-  --title-fg: #FFFFFF;
+    --sel-bg: #315b85;
+    --sel-fg: #ffffff;
+    --title-a: #315b85;
+    --title-b: #4a7fb0;
+    --title-fg: #ffffff;
 
-  --plot-bg: #202020;
-  --plot-fg: #E2E2E2;
-  --plot-grid: #666666;
+    --plot-bg: #202020;
+    --plot-fg: #e2e2e2;
+    --plot-grid: #666666;
 
-  /* dark bevel ramp (dms/theme.py _fastgraph95_stylesheet, dark variant) */
-  --hi: #8F8F8F;
-  --midhi: #666666;
-  --midlo: #1B1B1B;
-  --lo: #000000;
+    /* dark bevel ramp (dms/theme.py _fastgraph95_stylesheet, dark variant) */
+    --hi: #8f8f8f;
+    --midhi: #666666;
+    --midlo: #1b1b1b;
+    --lo: #000000;
 
-  --ghost: rgba(226, 226, 226, 0.45);
+    --ghost: rgba(226, 226, 226, 0.45);
 
-  color-scheme: dark;
+    color-scheme: dark;
 }

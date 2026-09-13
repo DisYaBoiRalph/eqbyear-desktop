@@ -225,7 +225,7 @@ def write(name, html):
     print("wrote", name, len(html))
 
 # =============================================================================
-# DIRECTION A — Bench instrument
+# DIRECTION A - Bench instrument
 # =============================================================================
 A_FONTS = "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap"
 A_ST = dict(bg="#0b0c0d", tick="#4a4e52", tick_major="#8a8f94", label="#9aa0a6", mono="'IBM Plex Mono', 'Menlo', monospace",
@@ -402,7 +402,7 @@ def build_a_warn():
     write("WarnBench.dc.html", wrap("A · first-run warning", A_FONTS, A_CSS, body))
 
 # =============================================================================
-# DIRECTION B — Lab notebook
+# DIRECTION B - Lab notebook
 # =============================================================================
 B_FONTS = "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@400;500;600&display=swap"
 B_MONO = "'Courier Prime', 'Courier New', monospace"
@@ -490,7 +490,7 @@ def build_b():
 
   <div class="sheet strip">
     <div class="strip-l">
-      <div class="lab">Sweep — drag slowly along the ruler</div>
+      <div class="lab">Sweep - drag slowly along the ruler</div>
       <div class="ruler">{tape}</div>
     </div>
     <div class="strip-r">
@@ -554,7 +554,7 @@ def build_b_warn():
     <div style="font-size:14px; line-height:1.55; color:#cfc7bb;">Sine tones at high level can damage hearing and equipment. Start quiet, then raise the level to where you normally listen to music.</div>
     <div style="display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px dashed rgba(244,239,230,0.2);">
       <div class="lvl">level <div class="bar" style="--x:10%"></div> −40 dB</div>
-      <span class="pill solid">{icon("power","#1a1300",14)} I understand — start</span>
+      <span class="pill solid">{icon("power","#1a1300",14)} I understand - start</span>
     </div>
   </div>
 </div>
@@ -562,7 +562,7 @@ def build_b_warn():
     write("WarnNotebook.dc.html", wrap("B · first-run warning", B_FONTS, B_CSS, body))
 
 # =============================================================================
-# DIRECTION C — Broadcast console
+# DIRECTION C - Broadcast console
 # =============================================================================
 C_FONTS = "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Manrope:wght@400;500;600&display=swap"
 C_MONO = "'Share Tech Mono', 'Menlo', monospace"
@@ -729,7 +729,7 @@ def build_c_warn():
 
 
 # =============================================================================
-# ROUND 2 — Quiet (minimal), light and dark
+# ROUND 2 - Quiet (minimal), light and dark
 # =============================================================================
 M_FONTS = ""
 M_MONO = "Menlo, Consolas, 'Courier New', monospace"
@@ -889,7 +889,7 @@ def build_min_warn(theme, fname, title):
 
 
 # =============================================================================
-# ROUND 3 — F · Fastgraph (matches DMS Fastgraph's default dark theme)
+# ROUND 3 - F · Fastgraph (matches DMS Fastgraph's default dark theme)
 # Tokens from DMS Fastgraph dms/ui/style_tokens.py DARK_TOKENS; button recipe from
 # dms/ui/modern_button.py (recessed well + radial accent glow rising on hover).
 # =============================================================================
@@ -1103,7 +1103,7 @@ def build_f_warn():
 
 
 # =============================================================================
-# FOR FUN — G · FastGraph 95 (tokens from FASTGRAPH_95_TOKENS, bevels from
+# FOR FUN - G · FastGraph 95 (tokens from FASTGRAPH_95_TOKENS, bevels from
 # _fastgraph95_stylesheet and ModernButton._paint_fastgraph95)
 # =============================================================================
 G = dict(desktop="#008080", face="#C0C0C0", hover="#D4D4D4", alt="#A0A0A0", white="#FFFFFF", text="#000000", muted="#404040",
@@ -1219,7 +1219,7 @@ def build_g():
     body = f"""
 <div class="desk">
  <div class="win">
-  <div class="title"><img src="dms-mark.png" alt=""> DMS fastgraph — EQ by ear<span class="sp"></span><span class="tb">_</span><span class="tb">□</span><span class="tb" style="margin-left:2px">×</span></div>
+  <div class="title"><img src="dms-mark.png" alt=""> DMS fastgraph - EQ by ear<span class="sp"></span><span class="tb">_</span><span class="tb">□</span><span class="tb" style="margin-left:2px">×</span></div>
   <div class="menu"><span>File</span><span>Edit</span><span>Tone</span><span>Bands</span><span>Help</span></div>
 
   <div class="row">
