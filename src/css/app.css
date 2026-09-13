@@ -599,7 +599,8 @@ html.desktop .main {
     display: block;
 }
 
-.sl95 input[type="range"] {
+.sl95 input[type="range"],
+.zoom input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
     display: block;
@@ -610,14 +611,17 @@ html.desktop .main {
     background: transparent;
     cursor: default;
 }
-.sl95 input[type="range"]:focus {
+.sl95 input[type="range"]:focus,
+.zoom input[type="range"]:focus {
     outline: none;
 }
-.sl95 input[type="range"]:focus-visible {
+.sl95 input[type="range"]:focus-visible,
+.zoom input[type="range"]:focus-visible {
     outline: 1px dotted var(--text);
 }
 
-.sl95 input[type="range"]::-webkit-slider-runnable-track {
+.sl95 input[type="range"]::-webkit-slider-runnable-track,
+.zoom input[type="range"]::-webkit-slider-runnable-track {
     height: 4px;
     box-sizing: border-box;
     background: var(--face);
@@ -627,7 +631,8 @@ html.desktop .main {
     border-bottom: 1px solid var(--hi);
     box-shadow: inset 1px 1px 0 var(--midlo);
 }
-.sl95 input[type="range"]::-webkit-slider-thumb {
+.sl95 input[type="range"]::-webkit-slider-thumb,
+.zoom input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 11px;
@@ -763,7 +768,7 @@ html.desktop .main {
     border-top: 2px solid var(--hi);
     padding-top: 3px;
 }
-.status span {
+.status > span {
     height: 20px;
     display: inline-flex;
     align-items: center;
@@ -781,6 +786,42 @@ html.desktop .main {
 }
 .status .saved.on {
     color: var(--text);
+}
+.status > span[hidden] {
+    display: none;
+}
+
+/* interface scale (desktop build) */
+.zoom,
+.status .zoom {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 20px;
+    padding: 0 2px 0 8px;
+    border-top: 1px solid var(--midlo);
+    border-left: 1px solid var(--midlo);
+    border-right: 1px solid var(--hi);
+    border-bottom: 1px solid var(--hi);
+}
+.zoom input[type="range"] {
+    width: 110px;
+    height: 16px;
+}
+.zoom input[type="range"]::-webkit-slider-thumb {
+    width: 9px;
+    height: 16px;
+    margin-top: -6px;
+}
+.zoom button {
+    min-width: 40px;
+    height: 16px;
+    padding: 0 4px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.zoom button:hover {
+    background: var(--hover);
 }
 
 /* ------------------------------------------------- gear (affiliate links) ---- */
@@ -823,6 +864,21 @@ html.desktop .main {
     padding: 40px;
 }
 .gate[hidden] {
+    display: none;
+}
+
+.gate-zoom {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    padding: 3px;
+    background: var(--face);
+    border-top: 2px solid var(--hi);
+    border-left: 2px solid var(--hi);
+    border-right: 2px solid var(--lo);
+    border-bottom: 2px solid var(--lo);
+}
+.gate-zoom[hidden] {
     display: none;
 }
 

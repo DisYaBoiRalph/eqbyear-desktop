@@ -132,6 +132,10 @@
   <!-- status bar -->
   <div class="status">
     <span class="grow">Ready.</span>
+    <span class="zoom" id="uiScale" title="Interface scale" hidden>
+      <input type="range" id="uiScaleRange" min="75" max="200" step="5" value="100" aria-label="Interface scale in percent">
+      <button type="button" id="uiScaleReset" title="Reset to 100%">100%</button>
+    </span>
     <span>v0.1</span>
     <span class="saved" id="saved">Saved</span>
   </div>
@@ -163,6 +167,12 @@
         <button type="button" class="b95 default" id="gateBtn">I understand, start</button>
       </div>
     </div>
+  </div>
+  <div class="gate-zoom" id="gateScale" hidden>
+    <span class="zoom" title="Interface scale">
+      <input type="range" id="gateScaleRange" min="75" max="200" step="5" value="100" aria-label="Interface scale in percent">
+      <button type="button" id="gateScaleReset" title="Reset to 100%">100%</button>
+    </span>
   </div>
 </div>
 

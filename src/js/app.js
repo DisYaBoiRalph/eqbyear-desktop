@@ -16,6 +16,7 @@ import {
 import { AudioEngine } from "./audio.js";
 import { Graph } from "./graph.js";
 import { SweepStrip } from "./sweep.js";
+import { initUiScale } from "./uiscale.js";
 import {
     isDesktop,
     createApoSync,
@@ -588,5 +589,9 @@ el.gateLevelOut.textContent = fmtDb(Number(el.gateLevel.value));
 
 render(store.get());
 initApoPanel();
+initUiScale([
+    { box: $("uiScale"), range: $("uiScaleRange"), reset: $("uiScaleReset") },
+    { box: $("gateScale"), range: $("gateScaleRange"), reset: $("gateScaleReset") },
+]);
 
 window.addEventListener("pagehide", () => storage.flush());
