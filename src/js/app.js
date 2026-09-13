@@ -16,6 +16,15 @@ import {
 import { AudioEngine } from './audio.js';
 import { Graph } from './graph.js';
 import { SweepStrip } from './sweep.js';
+import {
+  isDesktop,
+  createApoSync,
+  getSettings,
+  saveSettings,
+  detectConfigDir,
+  pickConfigDir,
+  ensureIncludeDirective,
+} from './apo.js';
 
 const MAX_BANDS = 8;
 const TYPE_LABEL = { PK: 'Peak', LSC: 'Low shelf', HSC: 'High shelf' };
@@ -57,12 +66,18 @@ const el = {
   gateLevel: $('gateLevel'),
   gateLevelOut: $('gateLevelOut'),
   gateBtn: $('gateBtn'),
+  apoPanel: $('apoPanel'),
+  apoEnable: $('apoEnable'),
+  apoPath: $('apoPath'),
+  apoChoose: $('apoChoose'),
+  apoStatus: $('apoStatus'),
 };
 
 // ----------------------------------------------------------------- state ---
 
 const restored = storage.load();
 const store = createStore(restored);
+const apoSync = createApoSync(store);
 
 // One-time move to the light default for sessions saved before the theme change.
 try {
@@ -365,6 +380,92 @@ el.gateBtn.addEventListener('click', async () => {
   pushAudio(store.get());
 });
 
+// --------------------------------------------------------------- apo sync ---
+
+function setApoStatus(text) {
+  el.apoStatus.textContent = text;
+}
+
+async function initApoPanel() {
+  if (!isDesktop()) return;
+
+  let settings;
+  try {
+    settings = await getSettings();
+  } catch (e) {
+    return; // no desktop shell after all
+  }
+
+  let configDir = settings.config_dir;
+  if (!configDir) {
+    try {
+      configDir = await detectConfigDir();
+    } catch (e) {
+      configDir = null;
+    }
+  }
+  if (configDir && configDir !== settings.config_dir) {
+    settings = { ...settings, config_dir: configDir };
+    try {
+      await saveSettings(settings);
+    } catch (e) {
+      /* best effort */
+    }
+  }
+
+  const paint = () => {
+    el.apoPath.textContent = configDir || 'Not set';
+    el.apoEnable.setAttribute('aria-checked', settings.sync_enabled ? 'true' : 'false');
+  };
+  paint();
+  el.apoPanel.hidden = false;
+
+  el.apoChoose.addEventListener('click', async () => {
+    const dir = await pickConfigDir();
+    if (!dir) return;
+    configDir = dir;
+    settings = { ...settings, config_dir: dir };
+    try {
+      await saveSettings(settings);
+    } catch (e) {
+      /* best effort */
+    }
+    paint();
+    if (settings.sync_enabled) apoSync.flushNow();
+  });
+
+  el.apoEnable.addEventListener('click', async () => {
+    if (!configDir) {
+      setApoStatus('Choose a folder first.');
+      return;
+    }
+    const next = !settings.sync_enabled;
+    settings = { ...settings, sync_enabled: next };
+    try {
+      await saveSettings(settings);
+    } catch (e) {
+      /* best effort */
+    }
+    paint();
+    if (next) {
+      try {
+        const result = await ensureIncludeDirective(configDir);
+        setApoStatus(result.already_present ? 'Ready.' : 'Set up: added the Include line.');
+        apoSync.flushNow();
+      } catch (e) {
+        setApoStatus(String(e && e.message ? e.message : e));
+      }
+    } else {
+      setApoStatus('Sync off.');
+    }
+  });
+
+  apoSync.onStatus(({ lastError, lastWriteAt }) => {
+    if (lastError) setApoStatus(`Error: ${lastError}`);
+    else if (lastWriteAt) setApoStatus(`Synced ${new Date(lastWriteAt).toLocaleTimeString()}`);
+  });
+}
+
 // ---------------------------------------------------------------- keyboard ---
 
 window.addEventListener('keydown', (e) => {
@@ -452,6 +553,16 @@ function render(s) {
 }
 
 store.subscribe(render);
+if (isDesktop()) {
+  // Skip sweep-only changes so dragging the tape does not reset the write debounce.
+  let apoSig = '';
+  store.subscribe((s) => {
+    const sig = JSON.stringify([s.bands, s.preampDb, s.eqOn]);
+    if (sig === apoSig) return;
+    apoSig = sig;
+    apoSync.onStateChange();
+  });
+}
 
 // Fresh session: the gate slider starts at −20 dB and writes it into state.
 // A restored session keeps its own level and shows it on the gate.
@@ -464,5 +575,6 @@ if (restored && Number.isFinite(Number(restored.levelDb))) {
 el.gateLevelOut.textContent = fmtDb(Number(el.gateLevel.value));
 
 render(store.get());
+initApoPanel();
 
 window.addEventListener('pagehide', () => storage.flush());

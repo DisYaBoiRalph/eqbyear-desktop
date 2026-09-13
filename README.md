@@ -9,23 +9,30 @@ Tutorial video: https://youtu.be/WIWHINQ5lV8
 
 ## Run locally
 
-```
-python3 -m http.server 8080
+```bash
+python3 -m http.server 8080 --directory src
 ```
 
-then open http://localhost:8080. Any static file server works.
+then open `http://localhost:8080`. Any static file server works.
 
 ## Layout
 
-- `index.html`, `css/`, `js/` — the site. ES modules, no build step.
-- `js/dsp.js` — filter math (RBJ biquads), log axis, three-point mark to band.
-- `tests/dsp.test.mjs` — `node tests/dsp.test.mjs`
-- `design/` — mock generator and artboards the theme was ported from.
-- `docs/SPEC.md` — build contract.
+- `src/index.html`, `src/css/`, `src/js/`, `src/assets/` - the site. ES modules, no build step.
+- `src/js/dsp.js` - filter math (RBJ biquads), log axis, three-point mark to band.
+- `tests/dsp.test.mjs` - `node tests/dsp.test.mjs`
+- `design/` - mock generator and artboards the theme was ported from.
+- `docs/SPEC.md` - build contract.
+- `src-tauri/` - the desktop build (see below).
 
-## Deploy
+## Desktop build
 
-Cloudflare Workers static assets: `npx wrangler deploy` (see `wrangler.jsonc`).
+A Tauri shell around the same site lives in `src-tauri/`. On Windows it can sync the EQ curve
+straight into EqualizerAPO. See `src-tauri/README.md`.
+
+```bash
+cargo tauri dev
+cargo tauri build
+```
 
 ## License
 
