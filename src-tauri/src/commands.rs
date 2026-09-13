@@ -1,6 +1,17 @@
 use tauri::AppHandle;
 
 use crate::apo::{self, ApoSettings, ApoStatus, IncludeResult, WriteResult};
+use crate::window_fit::{self, ScaleInfo};
+
+#[tauri::command]
+pub fn get_ui_scale(app: AppHandle) -> ScaleInfo {
+    window_fit::get_scale(&app)
+}
+
+#[tauri::command]
+pub fn set_ui_scale(app: AppHandle, percent: f64) -> ScaleInfo {
+    window_fit::set_scale(&app, percent)
+}
 
 #[tauri::command]
 pub fn detect_apo_config_dir() -> Result<Option<String>, String> {
