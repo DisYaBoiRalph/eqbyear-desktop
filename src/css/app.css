@@ -98,6 +98,15 @@ svg {
     gap: 6px;
 }
 
+/* desktop build: fill the window and scroll the band list, not the page */
+html.desktop .desk {
+    height: 100vh;
+    min-height: 0;
+}
+html.desktop .main {
+    grid-template-rows: minmax(0, 1fr);
+}
+
 .title {
     height: 20px;
     flex: none;

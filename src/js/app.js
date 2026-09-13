@@ -26,6 +26,8 @@ import {
     ensureIncludeDirective,
 } from "./apo.js";
 
+if (isDesktop()) document.documentElement.classList.add("desktop");
+
 const MAX_BANDS = 8;
 const TYPE_LABEL = { PK: "Peak", LSC: "Low shelf", HSC: "High shelf" };
 const MARK_LABEL = { start: "Start", top: "Top", end: "End" };
